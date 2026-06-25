@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCSE Electronics: Grand Slam Tennis</title>
+    <title>GCSE Electronics: Grand Slam Tennis (Keyboard Edition)</title>
     <style>
         :root {
             --grass-green: #38b000;
@@ -31,7 +31,6 @@
             width: 100%;
         }
 
-        /* Video Game Court Elements */
         .court-wrapper {
             position: relative;
             background-color: var(--grass-green);
@@ -48,7 +47,6 @@
             border-radius: 4px;
         }
 
-        /* UI Dashboard Panels */
         .side-panel {
             flex: 1;
             background: var(--panel-bg);
@@ -83,7 +81,6 @@
             font-size: 22px;
         }
 
-        /* Quiz Pop-Up (Overlay on Court) */
         .quiz-overlay {
             position: absolute;
             top: 50%;
@@ -163,8 +160,8 @@
 <body>
 
 <div style="text-align: center; margin-bottom: 15px;">
-    <h1 style="margin: 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">🎾 ELECTRONICS COUNTER CHAMPIONSHIP</h1>
-    <p style="margin: 5px 0; color: #d8f3dc; font-weight: bold;">Answer quickly for an AMAZING SMASH shot! Play through 2 full serving games.</p>
+    <h1 style="margin: 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">🎾 ELECTRONICS GRAND SLAM</h1>
+    <p style="margin: 5px 0; color: #d8f3dc; font-weight: bold;">Use <b>UP / DOWN ARROWS</b> or Mouse to move. Hit fast for an AMAZING SMASH!</p>
 </div>
 
 <div class="game-container">
@@ -204,19 +201,18 @@
             <div id="shot-alert-text" class="shot-alert"></div>
             <h4>🎙️ MATCH COMMENTARY</h4>
             <div id="commentary" class="commentary-box">
-                Welcome to the Silicon Court Finals!<br>Game 1: Player to serve. Ready... Play!
+                Game 1: Player to serve. Ready... Play!
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. QUESTION DATABASE GENERATOR (GCSE Electronics: Counter Curriculum)
+    // 1. QUESTION CONSTRUCTOR
     function buildTennisQuestions() {
         let pool = [];
         const edges = ["Rising Edge (LOW to HIGH transition)", "Falling Edge (HIGH to LOW transition)", "Steady logic state duration", "Floating logic lines"];
         const bcd = ["BCD decoders only recognize distinct decimal states 0 through 9", "The chip demands synchronized high-voltage pulses", "The pin layout runs in active-low reverse loops", "The decade array crashes at logic 8 limits"];
-        const decade4017 = ["Exactly one isolated single output pin is forced HIGH at any given cycle step", "All ten nodes emit sequential binary words together", "It limits frequencies down to absolute zero logic", "It can only decrement counter sequences down to base values"];
 
         for(let i=1; i<=25; i++) {
             pool.push({ q: `[Flip-Flops] Quiz Pin #${i}: At which specific logic transition point does a rising-edge triggered D-type flip-flop register updates from D to Q?`, a: [...edges], correct: edges[0] });
@@ -226,49 +222,41 @@
             pool.push({ q: `[Ripple Frequency] Problem #${i}: In a standard multi-stage ripple binary counter loop, if node output A executes at ${f}Hz, what output frequency is processed at node B?`, a: [`${f/2}Hz`, `${f*2}Hz`, `${f}Hz`, `${f/4}Hz`], correct: `${f/2}Hz` });
         }
         for(let i=1; i<=25; i++) {
-            let m = (i % 3) + 5; // Modulo 5, 6, 7
+            let m = (i % 3) + 5;
             let ans = m === 6 ? "Outputs B and C (0110)" : m === 5 ? "Outputs A and C (0101)" : "Outputs A, B, and C (0111)";
             pool.push({ q: `[Modulo Loops] Configuration Loop #${i}: To wire a 4-bit synchronous counter chip into an exact Modulo-${m} sequence, which outputs must route into the reset AND gate?`, a: [ans, "Outputs A and B (0011)", "Outputs A and D (1001)", "Line left grounded"], correct: ans });
-        }
-        for(let i=1; i<=25; i++) {
-            pool.push({ q: `[BCD Decoders] Display Fault #${i}: Why does a standard single Binary Coded Decimal (BCD) decoder fail to process or properly output the logic stream 1100 (Decimal 12)?`, a: [...bcd], correct: bcd[0] });
         }
         return pool;
     }
 
-    function scramble(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-
     let quizDatabase = buildTennisQuestions();
-    scramble(quizDatabase);
     let quizPointer = 0;
 
-    // 2. TENNIS GAME MATCH VARIABLES & ENGINE SCORING
     let tennisScores = ["0", "15", "30", "40", "Game"];
     let playerIdx = 0;
     let computerIdx = 0;
-    let currentGameNum = 1; // Game 1: Player Serves, Game 2: AI Serves
+    let currentGameNum = 1; 
 
-    // Canvas & Animation Physics Properties
     const canvas = document.getElementById('tennisCanvas');
     const ctx = canvas.getContext('2d');
 
-    let ball = { x: 300, y: 225, vx: 3, vy: 1.5, radius: 8, speedType: 'normal' };
-    let playerPaddle = { x: 40, y: 190, width: 12, height: 70, score: 0 };
-    let computerPaddle = { x: 548, y: 190, width: 12, height: 70, score: 0 };
+    let ball = { x: 300, y: 225, vx: 4, vy: 2, radius: 8, speedType: 'normal' };
+    let playerPaddle = { x: 40, y: 190, width: 12, height: 75 };
+    let computerPaddle = { x: 548, y: 190, width: 12, height: 75 };
 
     let isBallInPlay = true;
-    let turnOwner = 'player'; // 'player' or 'computer'
     let questionActive = false;
     let responseTimer = 0;
     let timerInterval = null;
 
-    // Track cursor movement on Canvas to align player paddle placement position
+    // Keyboard Tracking Flags
+    let keysPressed = {};
+    window.addEventListener('keydown', (e) => { keysPressed[e.key] = true; });
+    window.addEventListener('keyup', (e) => { keysPressed[e.key] = false; });
+
+    // Backup Mouse Controls
     canvas.addEventListener('mousemove', function(e) {
+        if(questionActive) return;
         let box = canvas.getBoundingClientRect();
         let targetY = e.clientY - box.top - playerPaddle.height / 2;
         playerPaddle.y = Math.max(10, Math.min(canvas.height - playerPaddle.height - 10, targetY));
@@ -281,27 +269,19 @@
 
     function displayShotAlert(text, color) {
         let el = document.getElementById('shot-alert-text');
-        el.innerText = text;
-        el.style.color = color;
-        setTimeout(() => { if(el.innerText === text) el.innerText = ""; }, 2500);
+        el.innerText = text; el.style.color = color;
     }
 
-    // 3. CORE TENNIS GAME MECHANICS / LOGIC
     function triggerQuestionSequence() {
         if (questionActive) return;
         questionActive = true;
         isBallInPlay = false;
 
-        if (quizPointer >= quizDatabase.length) {
-            scramble(quizDatabase);
-            quizPointer = 0;
-        }
-
-        let questionItem = quizDatabase[quizPointer];
+        let questionItem = quizDatabase[quizPointer % quizDatabase.length];
         document.getElementById('question-text').innerText = questionItem.q;
 
         let randomizedOptions = [...questionItem.a];
-        scramble(randomizedOptions);
+        randomizedOptions.sort(() => Math.random() - 0.5);
 
         let container = document.getElementById('options-container');
         container.innerHTML = "";
@@ -310,17 +290,12 @@
             let btn = document.createElement('button');
             btn.className = "option-btn";
             btn.innerText = optText;
-            btn.onclick = function() {
-                evaluateAnswer(optText, questionItem.correct);
-            };
+            btn.onclick = function() { evaluateAnswer(optText, questionItem.correct); };
             container.appendChild(btn);
         });
 
-        // Fire up prompt latency tracker clock loops
         responseTimer = 0;
-        document.getElementById('shot-timer').innerText = `Timer: 0.0s`;
         document.getElementById('quiz-overlay').style.display = "block";
-
         timerInterval = setInterval(() => {
             responseTimer += 0.1;
             document.getElementById('shot-timer').innerText = `Timer: ${responseTimer.toFixed(1)}s`;
@@ -334,81 +309,70 @@
         quizPointer++;
 
         if (selected === correct) {
-            // Speed Calculation Checks: Faster returns boost return parameters
             if (responseTimer <= 3.0) {
-                ball.speedType = 'smash';
-                ball.vx = 8; // Extreme smash velocity speeds
+                ball.speedType = 'smash'; ball.vx = 9;
                 displayShotAlert("🚀 AMAZING SMASH SHOT!", "#d90429");
-                addCommentary("Player executes an incredible high-voltage smash return line drive!");
+                addCommentary("Player executes an incredible high-voltage smash return!");
             } else if (responseTimer <= 8.0) {
-                ball.speedType = 'normal';
-                ball.vx = 5; // Standard clear
+                ball.speedType = 'normal'; ball.vx = 5;
                 displayShotAlert("Good Return", "#0077b6");
-                addCommentary("Player catches the logic bounce cleanly for a solid deep cross-court shot.");
+                addCommentary("Player sends a clean return cross-court.");
             } else {
-                ball.speedType = 'weak';
-                ball.vx = 3; // Weak short chip lob
-                displayShotAlert("🐢 WEAK LOB RETURN", "#b5e2fa");
-                addCommentary("Slow logic response! Player gives up a weak, floating loop back over the net.");
+                ball.speedType = 'weak'; ball.vx = 3.5;
+                displayShotAlert("Weak Return", "#7b2cbf");
+                addCommentary("Slow return! A floating chip shot is sent over.");
             }
-
-            // Adjust deflection variance angle depending on paddle position alignment values
             ball.vy = (Math.random() - 0.5) * 5;
+            ball.x = playerPaddle.x + playerPaddle.width + 5; // Nudge out of paddle bounds
             isBallInPlay = true;
-            turnOwner = 'computer';
         } else {
-            // Unforced Error Handler
             displayShotAlert("❌ MISS / UNFORCED ERROR", "red");
-            addCommentary("Short circuit error! Player miscalculated the state value and missed the ball.");
+            addCommentary("Wrong answer! Unforced circuitry error gives AI the point.");
             awardPoint('computer');
         }
     }
 
-    // Process AI automatic action loops depending on hit strengths
-    function handleComputerAI() {
-        // Linear follow paths
-        let trackingSpeed = ball.speedType === 'smash' ? 0.06 : 0.18;
-        let diff = (ball.y - (computerPaddle.y + computerPaddle.height / 2));
-        computerPaddle.y += diff * trackingSpeed;
+    // Fixed AI logic loop tracking the ball
+    function handleAI() {
+        if (!isBallInPlay || questionActive) return;
+        
+        let aiTarget = ball.y - (computerPaddle.height / 2);
+        // Adjust reaction speeds depending on shot intensity
+        let speedModifier = ball.speedType === 'smash' ? 2.5 : 4.0;
+        
+        if (computerPaddle.y < aiTarget) {
+            computerPaddle.y += speedModifier;
+        } else if (computerPaddle.y > aiTarget) {
+            computerPaddle.y -= speedModifier;
+        }
         computerPaddle.y = Math.max(10, Math.min(canvas.height - computerPaddle.height - 10, computerPaddle.y));
 
-        // When ball intersects the AI's zone line threshold
-        if (ball.x >= computerPaddle.x - 5 && ball.vx > 0) {
-            // If smash speed is active, give the AI a high native chance to slip up
-            let slipChance = ball.speedType === 'smash' ? 0.45 : 0.10;
-            
-            if (Math.random() < slipChance) {
-                addCommentary("The AI couldn't handle that speed! The ball tears past their defense.");
-                awardPoint('player');
+        // Intercept Boundaries
+        if (ball.x >= computerPaddle.x - 8 && ball.vx > 0) {
+            if (ball.y >= computerPaddle.y && ball.y <= computerPaddle.y + computerPaddle.height) {
+                let slipChance = ball.speedType === 'smash' ? 0.40 : 0.08;
+                if (Math.random() < slipChance) {
+                    addCommentary("The AI misjudges the velocity! Clean point to player.");
+                    awardPoint('player');
+                } else {
+                    ball.vx = -5;
+                    ball.speedType = 'normal';
+                    ball.vy = (Math.random() - 0.5) * 4;
+                    addCommentary("Computer safely tracks the volley and clears it.");
+                }
             } else {
-                // AI returns ball successfully
-                ball.vx = -4;
-                ball.speedType = 'normal';
-                ball.vy = (Math.random() - 0.5) * 4;
-                addCommentary("Computer tracks down the shot and slices it back over the line boundary.");
-                turnOwner = 'player';
+                awardPoint('player');
             }
         }
     }
 
     function awardPoint(winner) {
         isBallInPlay = false;
-        if (winner === 'player') {
-            playerIdx++;
-            addCommentary("Point awarded to Player!");
-        } else {
-            computerIdx++;
-            addCommentary("Point awarded to Computer AI!");
-        }
+        if (winner === 'player') playerIdx++; else computerIdx++;
+        addCommentary(`Point to ${winner === 'player' ? 'Player' : 'Computer'}!`);
 
-        // Evaluate Tennis Scoring Win rules
-        if (playerIdx >= 4 && playerIdx - computerIdx >= 2) {
-            handleGameWin('player');
-            return;
-        } else if (computerIdx >= 4 && computerIdx - playerIdx >= 2) {
-            handleGameWin('computer');
-            return;
-        }
+        if (playerIdx >= 4 && playerIdx - computerIdx >= 2) { handleGameWin('player'); return; }
+        if (computerIdx >= 4 && computerIdx - playerIdx >= 2) { handleGameWin('computer'); return; }
 
         updateScoreboardDisplay();
         resetBallDelivery();
@@ -416,91 +380,70 @@
 
     function handleGameWin(winner) {
         if (currentGameNum === 1) {
-            alert(`🏆 GAME 1 CONCLUDED! Winner: ${winner.toUpperCase()}.\nTransitioning to Game 2: Computer to Serve.`);
-            currentGameNum = 2;
-            playerIdx = 0;
-            computerIdx = 0;
+            alert(`🏆 GAME 1 COMPLETE! Winner: ${winner.toUpperCase()}.\nGame 2: Computer Serves next.`);
+            currentGameNum = 2; playerIdx = 0; computerIdx = 0;
             document.getElementById('current-game-num').innerText = "2/2";
             document.getElementById('server-indicator').innerText = "CURRENT SERVER: COMPUTER AI";
-            updateScoreboardDisplay();
-            resetBallDelivery();
+            updateScoreboardDisplay(); resetBallDelivery();
         } else {
-            // Match completed parameters execution sets
-            alert(`🏁 TOURNAMENT MATCH CONCLUDED!\nFinal Summary Results:\nGame 1 Server (Player): Complete\nGame 2 Server (AI): Complete\nThank you for passing the electronic gates loop!`);
-            currentGameNum = 1;
-            playerIdx = 0;
-            computerIdx = 0;
+            alert(`🏁 MATCH CONCLUDED!\nBoth games finished. Score values safely stored.`);
+            currentGameNum = 1; playerIdx = 0; computerIdx = 0;
             document.getElementById('current-game-num').innerText = "1/2";
             document.getElementById('server-indicator').innerText = "CURRENT SERVER: PLAYER";
-            updateScoreboardDisplay();
-            resetBallDelivery();
+            updateScoreboardDisplay(); resetBallDelivery();
         }
     }
 
     function updateScoreboardDisplay() {
-        // Handle Advantage/Deuce Edge cases rendering strings safely
         let pScore = tennisScores[Math.min(playerIdx, 4)];
         let cScore = tennisScores[Math.min(computerIdx, 4)];
-
         if (playerIdx >= 3 && computerIdx >= 3) {
-            if (playerIdx === computerIdx) {
-                pScore = "40"; cScore = "40"; // Deuce
-                addCommentary("DEUCE! Tension rises on the circuit court lines.");
-            } else if (playerIdx > computerIdx) {
-                pScore = "ADV"; cScore = "40";
-            } else {
-                pScore = "40"; cScore = "ADV";
-            }
+            if (playerIdx === computerIdx) { pScore = "40"; cScore = "40"; }
+            else if (playerIdx > computerIdx) { pScore = "ADV"; cScore = "40"; }
+            else { pScore = "40"; cScore = "ADV"; }
         }
-
         document.getElementById('player-tennis-score').innerText = pScore;
         document.getElementById('computer-tennis-score').innerText = cScore;
     }
 
     function resetBallDelivery() {
-        ball.x = 300;
-        ball.y = 225;
-        // Serve rules switch directions based on game parameters
-        if (currentGameNum === 1) {
-            ball.vx = 3; // Player Serves
-            turnOwner = 'computer';
-            addCommentary("Player hits service delivery across court...");
-        } else {
-            ball.vx = -3; // Computer Serves
-            turnOwner = 'player';
-            addCommentary("Computer delivers service strike over to your court panel...");
-        }
+        ball.x = 300; ball.y = 225;
+        ball.vx = currentGameNum === 1 ? 4 : -4;
         ball.vy = (Math.random() - 0.5) * 3;
         ball.speedType = 'normal';
         isBallInPlay = true;
     }
 
+    function processKeyboardInputs() {
+        if(questionActive) return;
+        let keyboardMoveSpeed = 5;
+        if (keysPressed['ArrowUp'] || keysPressed['w']) {
+            playerPaddle.y -= keyboardMoveSpeed;
+        }
+        if (keysPressed['ArrowDown'] || keysPressed['s']) {
+            playerPaddle.y += keyboardMoveSpeed;
+        }
+        playerPaddle.y = Math.max(10, Math.min(canvas.height - playerPaddle.height - 10, playerPaddle.y));
+    }
 
-    // 4. MAIN ENGINE RENDERING & PHYSICS ANIMATION LOOPS
     function updatePhysicsEngineLoop() {
+        processKeyboardInputs();
+        handleAI();
+
         if (isBallInPlay && !questionActive) {
             ball.x += ball.vx;
             ball.y += ball.vy;
 
-            // Upper and lower court horizontal wall ceiling deflections
-            if (ball.y <= 10 || ball.y >= canvas.height - 10) {
-                ball.vy = -ball.vy;
-            }
+            if (ball.y <= 10 || ball.y >= canvas.height - 10) ball.vy = -ball.vy;
 
-            // Turn Ownership checks: When tracking ball passes center bounds back to player
-            if (ball.x <= playerPaddle.x + playerPaddle.width + 10 && ball.vx < 0 && turnOwner === 'player') {
-                // If ball aligns perfectly within player height bounds, trigger the challenge questions
+            // Collision intercept parameters with player paddle
+            if (ball.x <= playerPaddle.x + playerPaddle.width && ball.vx < 0) {
                 if (ball.y >= playerPaddle.y && ball.y <= playerPaddle.y + playerPaddle.height) {
                     triggerQuestionSequence();
-                } else if (ball.x < playerPaddle.x - 5) {
-                    // Out of bounds check missing
-                    addCommentary("Ball sails past your racket lines!");
+                } else if (ball.x < playerPaddle.x - 15) {
+                    addCommentary("Ball misses your racket zone!");
                     awardPoint('computer');
                 }
-            }
-
-            if (turnOwner === 'computer') {
-                handleComputerAI();
             }
         }
 
@@ -509,59 +452,36 @@
     }
 
     function renderGraphics() {
-        // Clear frame
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw Court Layout markings lines
         ctx.strokeStyle = "rgba(255,255,255,0.4)";
         ctx.lineWidth = 3;
         
-        // Center Net Line
         ctx.beginPath();
         ctx.setLineDash([10, 10]);
-        ctx.moveTo(canvas.width / 2, 0);
-        ctx.lineTo(canvas.width / 2, canvas.height);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Outer margin boundary accents
+        ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke(); ctx.setLineDash([]);
         ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
 
-        // Draw Player Paddle Racket (Blue)
+        // Player (Blue)
         ctx.fillStyle = "#00b4d8";
         ctx.fillRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
-        ctx.strokeStyle = "#ffffff";
-        ctx.strokeRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
 
-        // Draw Computer Paddle Racket (Red)
+        // Computer (Red)
         ctx.fillStyle = "#e63946";
         ctx.fillRect(computerPaddle.x, computerPaddle.y, computerPaddle.width, computerPaddle.height);
-        ctx.strokeRect(computerPaddle.x, computerPaddle.y, computerPaddle.width, computerPaddle.height);
 
-        // Draw The Tennis Ball with Trail Graphics Effects depending on Speed status
+        // Ball Graphics
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-        
         if (ball.speedType === 'smash') {
-            ctx.fillStyle = "#ff0055"; // Fire effect tail
-            ctx.shadowBlur = 18;
-            ctx.shadowColor = "#ffb703";
-        } else if (ball.speedType === 'weak') {
-            ctx.fillStyle = "#a8dadc";
-            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#ff0055"; ctx.shadowBlur = 15; ctx.shadowColor = "#ffb703";
         } else {
-            ctx.fillStyle = varColor = getComputedStyle(document.documentElement).getPropertyValue('--ball-yellow').trim();
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = "rgba(0,0,0,0.4)";
+            ctx.fillStyle = "#ccff00"; ctx.shadowBlur = 0;
         }
-        ctx.fill();
-        ctx.closePath();
-        
-        // Reset Shadow States for clean loop steps
-        ctx.shadowBlur = 0;
+        ctx.fill(); ctx.closePath(); ctx.shadowBlur = 0;
     }
 
-    // Run Engine
+    resetBallDelivery();
     updatePhysicsEngineLoop();
 </script>
 
