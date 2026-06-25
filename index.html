@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCSE Electronics: Grand Slam Ultimate Arena</title>
+    <title>GCSE Electronics: Grand Slam Split-Keyboard Arena</title>
     <style>
         :root {
             --grass-green: #38b000;
@@ -25,14 +25,14 @@
             user-select: none;
         }
 
-        /* Menu Setup Screen */
+        /* Mode Selection Panel */
         .menu-screen {
             background: white;
             border: 4px solid var(--court-blue);
             border-radius: 16px;
             padding: 30px;
             text-align: center;
-            max-width: 500px;
+            max-width: 540px;
             width: 100%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
@@ -47,13 +47,13 @@
             font-weight: bold;
             cursor: pointer;
             margin: 10px;
-            width: 80%;
+            width: 85%;
             transition: background 0.2s, transform 0.1s;
         }
         .menu-btn:hover { background: #005683; transform: translateY(-2px); }
 
         .game-container {
-            display: none; /* Triggered on start */
+            display: none; /* Controlled via state */
             gap: 20px;
             max-width: 1100px;
             width: 100%;
@@ -84,7 +84,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 320px;
+            min-width: 340px;
         }
 
         .scoreboard {
@@ -105,6 +105,7 @@
 
         .score-val { font-weight: bold; color: var(--ball-yellow); font-size: 22px; }
 
+        /* Dynamic Pop-up Display Box */
         .quiz-overlay {
             position: absolute;
             top: 50%;
@@ -113,8 +114,8 @@
             background: rgba(255, 255, 255, 0.98);
             border: 4px solid #ffb703;
             border-radius: 16px;
-            width: 85%;
-            max-width: 520px;
+            width: 88%;
+            max-width: 530px;
             padding: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             display: none;
@@ -136,52 +137,75 @@
 
         .option-btn {
             background: #ffffff; border: 2px solid #ced4da; border-radius: 8px; color: #212529;
-            padding: 11px; margin: 6px 0; width: 100%; text-align: left; font-size: 13.5px;
+            padding: 12px; margin: 6px 0; width: 100%; text-align: left; font-size: 14px;
             cursor: pointer; transition: all 0.2s; font-family: inherit;
         }
         .option-btn:hover { background: #e3f2fd; border-color: var(--court-blue); transform: translateY(-1px); }
 
         .commentary-box {
             background: #e9f5db; border-left: 5px solid #718355; padding: 12px; border-radius: 4px;
-            height: 120px; overflow-y: auto; font-size: 13px; color: #4f5d3d;
+            height: 130px; overflow-y: auto; font-size: 13px; color: #4f5d3d;
         }
 
         .shot-alert { font-weight: bold; text-transform: uppercase; font-size: 20px; text-align: center; margin: 10px 0; min-height: 24px; }
+        
+        .serve-prompt {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(33, 37, 41, 0.9);
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            pointer-events: none;
+            animation: pulseText 1s infinite alternate;
+        }
+        @keyframes pulseText { 0% { opacity: 0.7; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div id="setup-menu" class="menu-screen">
-    <h2 style="color: var(--court-blue); margin-top:0;">🎾 GRAND SLAM ARENA CONFIG</h2>
-    <p>Select your game match parameters to mount court modules:</p>
-    <button class="menu-btn" onclick="startGameMode('pve')">👤 1 Player vs. Computer (AI)</button>
-    <button class="menu-btn" style="background-color: var(--grass-green);" onclick="startGameMode('pvp')">👥 2 Player Local Versus Mode</button>
-    <div style="font-size:12px; color: #555; text-align:left; margin-top:15px; background: #eee; padding:10px; border-radius:6px;">
-        <b>🎮 Controls Guide:</b><br>
-        - 1 Player: Use <b>W / S keys</b> OR <b>UP / DOWN arrows</b> to move.<br>
-        - 2 Players: P1 (Left Side) uses <b>W / S keys</b>. P2 (Right Side) uses <b>UP / DOWN arrows</b>.
+    <h2 style="color: var(--court-blue); margin-top:0;">🎾 GCSE ELECTRONICS GRAND SLAM</h2>
+    <p>Select match settings to allocate logic components to court lines:</p>
+    <button class="menu-btn" onclick="initiateMatchMode('pve')">👤 1 Player vs. Mainframe Computer AI</button>
+    <button class="menu-btn" style="background-color: var(--grass-green);" onclick="initiateMatchMode('pvp')">👥 2 Player Local Versus Mode (Same Keyboard)</button>
+    
+    <div style="font-size:12.5px; color: #444; text-align:left; margin-top:20px; background: #f1f3f5; padding:12px; border-radius:8px; line-height: 1.5;">
+        <b>🎮 Input Mapping Guidelines:</b><br>
+        • <b>Player 1 (Left):</b> Move with <b>W / S keys</b>.<br>
+        • <b>Player 2 (Right):</b> Move with <b>UP / DOWN Arrows</b>.<br>
+        • <b>Serving:</b> Press <b>SPACEBAR</b> to trigger a serve when prompted!
     </div>
 </div>
 
 <div class="game-container" id="match-mainframe">
     <div class="court-wrapper">
         <canvas id="tennisCanvas" width="600" height="450"></canvas>
+        
+        <div id="serve-indicator-box" class="serve-prompt">PRESS SPACEBAR TO SERVE</div>
 
         <div id="quiz-overlay" class="quiz-overlay">
             <div class="quiz-header">
-                <span style="font-weight: bold; color: var(--court-blue);" id="shot-type-indicator">🎾 YOUR SHOT!</span>
+                <span style="font-weight: bold; color: var(--court-blue);" id="shot-side-title">🎾 CHALLENGE STRIKE</span>
                 <span class="timer-badge" id="shot-timer">Timer: 0.0s</span>
             </div>
-            <p id="question-text" style="font-weight: 500; font-size: 14.5px; margin-top: 0;"></p>
+            <p id="question-text" style="font-weight: 500; font-size: 15px; margin-top: 0; line-height:1.4;"></p>
             <div id="options-container"></div>
         </div>
     </div>
 
     <div class="side-panel">
         <div>
-            <h3 style="margin-top:0; border-bottom: 2px solid #dee2e6; padding-bottom:5px;">📊 CIRCUIT STANDINGS</h3>
+            <h3 style="margin-top:0; border-bottom: 2px solid #dee2e6; padding-bottom:5px;">📊 SCORE ENGINE MATRIX</h3>
             <div class="scoreboard">
-                <div style="font-size:12px; color: #aaa; margin-bottom: 5px;" id="server-indicator">SERVER: PLAYER 1</div>
+                <div style="font-size:12px; color: #ccff00; font-weight:bold; margin-bottom: 8px;" id="server-turn-display">SERVER: PLAYER 1</div>
                 <div class="score-row">
                     <span id="p1-label">👤 PLAYER 1 (LEFT)</span>
                     <span class="score-val" id="p1-tennis-score">0</span>
@@ -191,7 +215,7 @@
                     <span class="score-val" id="p2-tennis-score">0</span>
                 </div>
                 <div style="border-top: 1px dashed #444; margin-top: 10px; padding-top: 5px; font-size: 13px; display: flex; justify-content: space-around;">
-                    <span>Game Set: <b id="current-game-num">1/2</b></span>
+                    <span>Match Set: <b id="current-game-num">1/2</b></span>
                 </div>
             </div>
         </div>
@@ -200,66 +224,71 @@
             <div id="shot-alert-text" class="shot-alert"></div>
             <h4>🎙️ COUPLING COMMENTARY</h4>
             <div id="commentary" class="commentary-box">
-                Arena online. Initializing 100 questions...
+                Awaiting mode allocation modules...
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. GENERATE FULL COMPREHENSIVE 100-QUESTION GCSE BANK
-    function build100TennisQuestions() {
+    // 1. GENERATE THE COMPLETE 100-QUESTION GCSE REVISION DATA POOL
+    function buildMasterQuestionBank() {
         let pool = [];
-        const edgeOpts = ["Rising Edge (LOW to HIGH transition)", "Falling Edge (HIGH to LOW transition)", "Steady state logic baseline voltage", "Floating circuit line decay window"];
-        const bcdOpts = ["BCD networks can only map distinct single values between 0 and 9", "High-frequency clock registers trigger system resets", "The active-low logic lines lock the segment driver up", "The array triggers automatic binary increments above 8"];
-        const decOpts = ["Exactly one single output pin is driven sequentially HIGH at a time step", "All outputs output parallel binary bursts together", "The clock counts backwards dynamically down to zero lines", "It halts processing when logic levels cross 5V markers"];
-        const syncOpts = ["All stage flip-flops are clocked simultaneously by a single source", "Data ripples through each stage sequentially with propagation delay", "The counter relies on RC charging cycles", "It can only count down backwards"];
+        const edges = ["Rising Edge (LOW to HIGH transition)", "Falling Edge (HIGH to LOW transition)", "Steady HIGH state logic baseline", "Floating logic decay impedance"];
+        const bcds = ["BCD display configurations can only process discrete states 0 through 9", "The chip demands parallel clock triggers above 12V", "The active-low logic loops lock out register increments", "The latch array forces inverted outputs beyond 8 counts"];
+        const decades = ["Exactly one single output pin is driven sequentially HIGH at a time step", "All ten nodes emit sequential parallel binary words simultaneously", "The clock counts backwards dynamically down to zero nodes", "It grounds processing outputs when lines cross 5V rails"];
+        const syncs = ["All internal stage flip-flops are clocked simultaneously by a single source pulse", "Data ripples down through each successive stage with propagation delay", "The counter operates strictly on internal resistor-capacitor charging loops", "It can only decrement values backwards downwards"];
 
-        // Mix 25 questions of each core standard syllabus concept
+        // Append 25 variants per category to assemble a 100-question pool
         for (let i = 1; i <= 25; i++) {
-            pool.push({ q: `[D-Type Edge Triggers] Question #${i}: At what exact signal threshold boundary does a standard rising-edge D-type flip-flop transfer binary data from input D to output Q?`, a: [...edgeOpts], correct: edgeOpts[0] });
-        }
-        for (let i = 1; i <= 25; i++) {
-            let f = 100 * (i % 4 + 1) * 2;
-            pool.push({ q: `[Ripple Counters] Question #${i}: In a multi-stage asynchronous ripple binary counter chain, if the first flip-flop stage output registers a frequency of ${f} Hz, what is the divided frequency output at the next stage?`, a: [`${f/2} Hz`, `${f*2} Hz`, `${f} Hz`, `${f/4} Hz`], correct: `${f/2} Hz` });
-        }
-        for (let i = 1; i <= 25; i++) {
-            let modVal = (i % 3) + 5; // Modulo 5, 6, 7
-            let ans = modVal === 6 ? "Outputs B and C (Binary 0110)" : modVal === 5 ? "Outputs A and C (Binary 0101)" : "Outputs A, B, and C (Binary 0111)";
-            pool.push({ q: `[Modulo Limits] Question #${i}: You are constructing a recycling Modulo-${modVal} tracking counter. Which sequential bit output lines must feed into the logic AND gate to activate the counter's master reset?`, a: [ans, "Outputs A and B (Binary 0011)", "Outputs A and D (Binary 1001)", "Ground output lines to discharge voltage"], correct: ans });
-        }
-        for (let i = 1; i <= 25; i++) {
-            pool.push({ q: `[BCD Decoder Core] Question #${i}: Why does sending an invalid 4-bit binary word of 1110 (Decimal 14) directly into a single BCD-to-7-segment decoder chip cause a visual error or display blanking?`, a: [...bcdOpts], correct: bcdOpts[0] });
+            pool.push({ q: `[D-Type Latches] Diagnostic Pin #${i}: At what exact signal threshold boundary execution point does a conventional rising-edge triggered D-type flip-flop transfer binary data directly from input D to output Q?`, a: [...edges], correct: edges[0] });
+            pool.push({ q: `[Ripple Counters] Frequency Loop #${i}: Inside a multi-stage asynchronous binary ripple counter chain, if the first flip-flop latch stage registers an input clock of ${60 * (i%4+1)} Hz, what frequency is observed at the next output stage downstream?`, a: [`${(60 * (i%4+1))/2} Hz`, `${(60 * (i%4+1))*2} Hz`, `${60 * (i%4+1)} Hz`, `${(60 * (i%4+1))/4} Hz`], correct: `${(60 * (i%4+1))/2} Hz` });
+            
+            let modNum = (i % 3) + 5; // Modulo 5, 6, 7
+            let ansMod = modNum === 6 ? "Outputs B and C (Binary 0110)" : modNum === 5 ? "Outputs A and C (Binary 0101)" : "Outputs A, B, and C (Binary 0111)";
+            pool.push({ q: `[Modulo Feedback] Architecture Set #${i}: To configure a standard 4-bit synchronous binary counter into an exact recycling Modulo-${modNum} loop, which specific bit lines must be routed to the reset AND gate inputs?`, a: [ansMod, "Outputs A and B (Binary 0011)", "Outputs A and D (Binary 1001)", "Reset pins must be left floating to default to clear"], correct: ansMod });
+            
+            pool.push({ q: `[BCD Segment Drivers] Evaluation Check #${i}: Why does routing an invalid 4-bit binary word like 1101 (Decimal 13) directly into a standard BCD-to-7-segment decoder chip cause a visual error or display blackout?`, a: [...bcds], correct: bcds[0] });
         }
         return pool;
     }
 
-    let quizDatabase = build100TennisQuestions();
-    quizDatabase.sort(() => Math.random() - 0.5); // Initial shuffle sequence
+    let quizDatabase = buildMasterQuestionBank();
+    quizDatabase.sort(() => Math.random() - 0.5); // Fully randomize allocation orders
     let quizPointer = 0;
 
-    // 2. STATE DECLARATIONS
-    let gameMode = 'pve'; // 'pve' or 'pvp'
-    let tennisScores = ["0", "15", "30", "40", "Game"];
-    let p1Idx = 0; let p2Idx = 0;
-    let currentGameNum = 1; 
+    // 2. STATE LOGIC DECLARATIONS
+    let matchMode = 'pve'; 
+    let tennisPoints = ["0", "15", "30", "40", "Game"];
+    let p1PointsIdx = 0; let p2PointsIdx = 0;
+    let currentGameNum = 1; // Game 1: P1 Serves, Game 2: P2 Serves
 
     const canvas = document.getElementById('tennisCanvas');
     const ctx = canvas.getContext('2d');
 
-    let ball = { x: 300, y: 225, vx: 4, vy: 2, radius: 8, speedType: 'normal' };
-    let p1Paddle = { x: 40, y: 190, width: 12, height: 75 };
-    let p2Paddle = { x: 548, y: 190, width: 12, height: 75 };
+    let ball = { x: 300, y: 225, vx: 0, vy: 0, radius: 8, speedType: 'normal' };
+    let p1Paddle = { x: 40, y: 185, width: 12, height: 80 };
+    let p2Paddle = { x: 548, y: 185, width: 12, height: 80 };
 
-    let isBallInPlay = true;
-    let turnOwner = 'p1'; // 'p1' or 'p2'
+    let isBallInPlay = false;
+    let awaitingServe = true; 
+    let currentServer = 'p1'; // 'p1' or 'p2'
     let questionActive = false;
     let responseTimer = 0;
     let timerInterval = null;
     let keysPressed = {};
 
-    // Capture standard system keyboard inputs
-    window.addEventListener('keydown', (e) => { keysPressed[e.key.toLowerCase()] = true; });
+    // Track active key states globally
+    window.addEventListener('keydown', (e) => { 
+        let keyLower = e.key.toLowerCase();
+        keysPressed[keyLower] = true; 
+        
+        // Intercept spacebar inputs for serve modules
+        if (e.key === " " || e.code === "Space") {
+            e.preventDefault(); // Halt standard browser screen scrolling
+            triggerActiveBallServe();
+        }
+    });
     window.addEventListener('keyup', (e) => { keysPressed[e.key.toLowerCase()] = false; });
 
     function addCommentary(msg) {
@@ -272,235 +301,284 @@
         el.innerText = text; el.style.color = color;
     }
 
-    // 3. MENU SWITCH HOOK
-    function startGameMode(selectedMode) {
-        gameMode = selectedMode;
+    // 3. MENU SWITCH OVERRIDES
+    function initiateMatchMode(mode) {
+        matchMode = mode;
         document.getElementById('setup-menu').style.display = "none";
         document.getElementById('match-mainframe').style.display = "flex";
         
-        if (gameMode === 'pvp') {
+        if (matchMode === 'pvp') {
             document.getElementById('p2-label').innerText = "👤 PLAYER 2 (RIGHT)";
-            document.getElementById('server-indicator').innerText = "SERVER: PLAYER 1";
-            addCommentary("Local 2-Player Split Keyboard Match active! P1 uses WS, P2 uses Arrows.");
+            addCommentary("Split keyboard local 2-Player game engaged! P1 uses W/S, P2 uses Arrows. Space to serve.");
         } else {
             document.getElementById('p2-label').innerText = "🤖 COMPUTER AI";
-            document.getElementById('server-indicator').innerText = "SERVER: PLAYER";
-            addCommentary("Solo Match initialization complete. Facing down the computer mainframe AI.");
+            addCommentary("Single-player vs AI mode initialized. Space to serve.");
         }
-        resetBallDelivery();
+        setupServingParameters();
         updatePhysicsEngineLoop();
     }
 
-    // 4. MULTIPLAYER QUESTION MECHANISM
-    function triggerQuestionSequence(playerSide) {
+    // 4. SPACEBAR SERVING ENGINE
+    function setupServingParameters() {
+        isBallInPlay = false;
+        awaitingServe = true;
+        ball.speedType = 'normal';
+        ball.vy = 0;
+        
+        // Track the current game server to update serving alignments
+        if (currentGameNum === 1) {
+            currentServer = 'p1';
+            document.getElementById('server-turn-display').innerText = "SERVER: PLAYER 1 (LEFT)";
+            ball.x = p1Paddle.x + p1Paddle.width + 10;
+            ball.y = p1Paddle.y + (p1Paddle.height / 2);
+        } else {
+            currentServer = 'p2';
+            document.getElementById('server-turn-display').innerText = matchMode === 'pvp' ? "SERVER: PLAYER 2 (RIGHT)" : "SERVER: COMPUTER AI";
+            ball.x = p2Paddle.x - 10;
+            ball.y = p2Paddle.y + (p2Paddle.height / 2);
+        }
+        document.getElementById('serve-indicator-box').style.display = "block";
+    }
+
+    function triggerActiveBallServe() {
+        if (!awaitingServe || questionActive) return;
+        
+        document.getElementById('serve-indicator-box').style.display = "none";
+        awaitingServe = false;
+        isBallInPlay = true;
+
+        // Apply velocities based on which player is serving
+        if (currentServer === 'p1') {
+            ball.vx = 4.5;
+            ball.vy = (Math.random() - 0.5) * 3;
+            addCommentary("Player 1 delivers a deep service ball across the net line.");
+        } else {
+            ball.vx = -4.5;
+            ball.vy = (Math.random() - 0.5) * 3;
+            addCommentary(matchMode === 'pvp' ? "Player 2 hits a heavy cross-court service line return." : "Computer AI executes service delivery parameters.");
+        }
+    }
+
+    // 5. SPLIT QUESTION MECHANICS LOOP
+    function launchQuestionSequence(activeSide) {
         if (questionActive) return;
         questionActive = true;
         isBallInPlay = false;
 
         let questionItem = quizDatabase[quizPointer % quizDatabase.length];
         document.getElementById('question-text').innerText = questionItem.q;
-        
-        // Dynamic side labels updates
-        let displaySide = playerSide === 'p1' ? "PLAYER 1 (LEFT SIDE)" : (gameMode === 'pvp' ? "PLAYER 2 (RIGHT SIDE)" : "COMPUTER AI");
-        document.getElementById('shot-type-indicator').innerText = `🎾 CHALLENGE FOR: ${displaySide}`;
 
-        let randomizedOptions = [...questionItem.a];
-        randomizedOptions.sort(() => Math.random() - 0.5); // Randomize every time a question loads
+        let targetSideString = activeSide === 'p1' ? "PLAYER 1 (LEFT SIDE)" : (matchMode === 'pvp' ? "PLAYER 2 (RIGHT SIDE)" : "COMPUTER AI");
+        document.getElementById('shot-side-title').innerText = `🎯 YOUR SHOT: ${targetSideString}`;
+
+        // Scramble options completely every single pop-up
+        let choices = [...questionItem.a];
+        choices.sort(() => Math.random() - 0.5);
 
         let container = document.getElementById('options-container');
         container.innerHTML = "";
 
-        randomizedOptions.forEach(optText => {
+        choices.forEach(optText => {
             let btn = document.createElement('button');
             btn.className = "option-btn";
             btn.innerText = optText;
-            btn.onclick = function() { evaluateAnswer(optText, questionItem.correct, playerSide); };
+            btn.onclick = function() { checkVolleyResponse(optText, questionItem.correct, activeSide); };
             container.appendChild(btn);
         });
 
         responseTimer = 0;
         document.getElementById('shot-timer').innerText = `Timer: 0.0s`;
         document.getElementById('quiz-overlay').style.display = "block";
+
+        // Latency clock tracker
         timerInterval = setInterval(() => {
             responseTimer += 0.1;
             document.getElementById('shot-timer').innerText = `Timer: ${responseTimer.toFixed(1)}s`;
+            
+            // Timeout Check - If they take more than 15 seconds, it's a miss
+            if (responseTimer >= 15.0) {
+                clearInterval(timerInterval);
+                document.getElementById('quiz-overlay').style.display = "none";
+                questionActive = false;
+                quizPointer++;
+                displayShotAlert("⏰ SHOT TIMEOUT! MISS!", "red");
+                addCommentary(`${activeSide.toUpperCase()} was too slow to analyze the counter! Point to opponent.`);
+                awardPoint(activeSide === 'p1' ? 'p2' : 'p1');
+            }
         }, 100);
     }
 
-    function evaluateAnswer(selected, correct, playerSide) {
+    function checkVolleyResponse(selected, correct, activeSide) {
         clearInterval(timerInterval);
         document.getElementById('quiz-overlay').style.display = "none";
         questionActive = false;
         quizPointer++;
 
-        let otherSide = playerSide === 'p1' ? 'p2' : 'p1';
+        let opponentSide = activeSide === 'p1' ? 'p2' : 'p1';
 
         if (selected === correct) {
-            // Speed dynamic calculations determines volley return velocities
+            // Speed ratings directly scale output ball speeds
             if (responseTimer <= 3.0) {
                 ball.speedType = 'smash';
-                ball.vx = playerSide === 'p1' ? 9.5 : -9.5;
+                ball.vx = activeSide === 'p1' ? 9.5 : -9.5;
                 displayShotAlert("🚀 AMAZING SMASH SHOT!", "#d90429");
-                addCommentary(`${playerSide.toUpperCase()} hits an incredible lightning speed smash line smash!`);
+                addCommentary(`${activeSide.toUpperCase()} registers a lightning response for an un-returnable smash shot!`);
             } else if (responseTimer <= 8.0) {
                 ball.speedType = 'normal';
-                ball.vx = playerSide === 'p1' ? 5.5 : -5.5;
-                displayShotAlert("Good Return", "#0077b6");
-                addCommentary(`${playerSide.toUpperCase()} grounds a secure standard return back across court.`);
+                ball.vx = activeSide === 'p1' ? 5.5 : -5.5;
+                displayShotAlert("Good Clear", "#0077b6");
+                addCommentary(`${activeSide.toUpperCase()} returns a clean, deep drive across the circuit boundary.`);
             } else {
                 ball.speedType = 'weak';
-                ball.vx = playerSide === 'p1' ? 3.5 : -3.5;
+                ball.vx = activeSide === 'p1' ? 3.5 : -3.5;
                 displayShotAlert("Weak Lob", "#7b2cbf");
-                addCommentary(`${playerSide.toUpperCase()} was slow to calculate and lobs a weak high volley.`);
+                addCommentary(`${activeSide.toUpperCase()} responds slowly, offering a weak high floating chip.`);
             }
             ball.vy = (Math.random() - 0.5) * 5;
+            
+            // Push out of bounds safely to clear intercept loops
+            if (activeSide === 'p1') ball.x = p1Paddle.x + p1Paddle.width + 5;
+            else ball.x = p2Paddle.x - 5;
+            
             isBallInPlay = true;
-            turnOwner = otherSide;
         } else {
-            displayShotAlert(`❌ ${playerSide.toUpperCase()} MISSED / WRONG ANSWER`, "red");
-            addCommentary(`${playerSide.toUpperCase()} failed logic parsing check. Point unforced error awarded to opposite side.`);
-            awardPoint(otherSide);
+            // Wrong Answer counts as a Miss
+            displayShotAlert(`❌ ${activeSide.toUpperCase()} MISSED / WRONG ANSWER`, "red");
+            addCommentary(`${activeSide.toUpperCase()} mistimed the edge trigger calculations! Point awarded to opponent.`);
+            awardPoint(opponentSide);
         }
     }
 
-    // 5. MOTION INTEGRATION MODULES (WS & Arrows Processing loops)
-    function processKeyboardInputs() {
+    // 6. MOTOR PLATFORM LOGIC
+    function evaluatePaddleMovement() {
         if (questionActive) return;
-        let paddleSpeed = 5.5;
+        let pSpeed = 6.0;
 
-        // Player 1 (Left Side Controls) - Accepts both WS keys
-        if (keysPressed['w']) {
-            p1Paddle.y -= paddleSpeed;
-        }
-        if (keysPressed['s']) {
-            p1Paddle.y += paddleSpeed;
-        }
+        // Player 1 Engine Processing (W / S mapping keys)
+        if (keysPressed['w']) p1Paddle.y -= pSpeed;
+        if (keysPressed['s']) p1Paddle.y += pSpeed;
         p1Paddle.y = Math.max(10, Math.min(canvas.height - p1Paddle.height - 10, p1Paddle.y));
 
-        // Player 2 or Computer Processing routes
-        if (gameMode === 'pvp') {
-            // Arrow controls specifically for player 2 in split configuration
-            if (keysPressed['arrowup']) {
-                p2Paddle.y -= paddleSpeed;
-            }
-            if (keysPressed['arrowdown']) {
-                p2Paddle.y += paddleSpeed;
-            }
+        // Player 2 or AI Engine Routing
+        if (matchMode === 'pvp') {
+            if (keysPressed['arrowup']) p2Paddle.y -= pSpeed;
+            if (keysPressed['arrowdown']) p2Paddle.y += pSpeed;
             p2Paddle.y = Math.max(10, Math.min(canvas.height - p2Paddle.height - 10, p2Paddle.y));
         } else {
-            // Standard computer AI autonomous action loops
-            if (!isBallInPlay) return;
-            let aiTarget = ball.y - (p2Paddle.height / 2);
-            let aiSpeed = ball.speedType === 'smash' ? 2.8 : 4.0;
-            if (p2Paddle.y < aiTarget) p2Paddle.y += aiSpeed;
-            else if (p2Paddle.y > aiTarget) p2Paddle.y -= aiSpeed;
+            // Autonomous Computer Mainframe Tracker logic loops
+            if (!isBallInPlay || awaitingServe) return;
+            let aiCenter = ball.y - (p2Paddle.height / 2);
+            let responseDelay = ball.speedType === 'smash' ? 2.6 : 4.2;
+            if (p2Paddle.y < aiCenter) p2Paddle.y += responseDelay;
+            else if (p2Paddle.y > aiCenter) p2Paddle.y -= responseDelay;
             p2Paddle.y = Math.max(10, Math.min(canvas.height - p2Paddle.height - 10, p2Paddle.y));
         }
     }
 
-    // 6. SCORING ENGINE RULES
+    // 7. POINT EVALUATION MATRIX
     function awardPoint(winner) {
         isBallInPlay = false;
-        if (winner === 'p1') p1Idx++; else p2Idx++;
-        addCommentary(`Point tracking update: Side ${winner.toUpperCase()} claims the point.`);
+        if (winner === 'p1') p1PointsIdx++; else p2PointsIdx++;
 
-        if (p1Idx >= 4 && p1Idx - p2Idx >= 2) { handleGameWin('p1'); return; }
-        if (p2Idx >= 4 && p2Idx - p1Idx >= 2) { handleGameWin('p2'); return; }
+        if (p1PointsIdx >= 4 && p1PointsIdx - p2PointsIdx >= 2) { resolveGameWinner('p1'); return; }
+        if (p2PointsIdx >= 4 && p2PointsIdx - p1PointsIdx >= 2) { resolveGameWinner('p2'); return; }
 
         updateScoreboardDisplay();
-        resetBallDelivery();
+        setupServingParameters();
     }
 
-    function handleGameWin(winner) {
-        let label = winner === 'p1' ? "PLAYER 1" : (gameMode === 'pvp' ? "PLAYER 2" : "COMPUTER AI");
+    function resolveGameWinner(winner) {
+        let name = winner === 'p1' ? "PLAYER 1" : (matchMode === 'pvp' ? "PLAYER 2" : "COMPUTER AI");
         if (currentGameNum === 1) {
-            alert(`🏆 GAME 1 COMPLETE! Winner: ${label}.\nTransitioning to Game 2: Reverse service parameters active.`);
-            currentGameNum = 2; p1Idx = 0; p2Idx = 0;
+            alert(`🏆 GAME 1 COMPLETE! Winner: ${name}.\nTransitioning to Game 2: Service swaps sides.`);
+            currentGameNum = 2; p1PointsIdx = 0; p2PointsIdx = 0;
             document.getElementById('current-game-num').innerText = "2/2";
-            document.getElementById('server-indicator').innerText = gameMode === 'pvp' ? "SERVER: PLAYER 2" : "SERVER: COMPUTER AI";
-            updateScoreboardDisplay(); resetBallDelivery();
+            updateScoreboardDisplay(); setupServingParameters();
         } else {
-            alert(`🏁 TOURNAMENT COMPLETED!\nBoth serving schedule rotations have completed calculations successfully.`);
-            currentGameNum = 1; p1Idx = 0; p2Idx = 0;
+            alert(`🏁 TOURNAMENT SET CONCLUDED!\nBoth serving schedules have finished operations successfully.`);
+            currentGameNum = 1; p1PointsIdx = 0; p2PointsIdx = 0;
             document.getElementById('current-game-num').innerText = "1/2";
-            document.getElementById('server-indicator').innerText = "SERVER: PLAYER 1";
-            updateScoreboardDisplay(); resetBallDelivery();
+            updateScoreboardDisplay(); setupServingParameters();
         }
     }
 
     function updateScoreboardDisplay() {
-        let p1Score = tennisScores[Math.min(p1Idx, 4)];
-        let p2Score = tennisScores[Math.min(p2Idx, 4)];
-        if (p1Idx >= 3 && p2Idx >= 3) {
-            if (p1Idx === p2Idx) { p1Score = "40"; p2Score = "40"; }
-            else if (p1Idx > p2Idx) { p1Score = "ADV"; p2Score = "40"; }
-            else { p1Score = "40"; p2Score = "ADV"; }
+        let s1 = tennisPoints[Math.min(p1PointsIdx, 4)];
+        let s2 = tennisPoints[Math.min(p2PointsIdx, 4)];
+        if (p1PointsIdx >= 3 && p2PointsIdx >= 3) {
+            if (p1PointsIdx === p2PointsIdx) { s1 = "40"; s2 = "40"; }
+            else if (p1PointsIdx > p2PointsIdx) { s1 = "ADV"; s2 = "40"; }
+            else { s1 = "40"; s2 = "ADV"; }
         }
-        document.getElementById('p1-tennis-score').innerText = p1Score;
-        document.getElementById('p2-tennis-score').innerText = p2Score;
+        document.getElementById('p1-tennis-score').innerText = s1;
+        document.getElementById('p2-tennis-score').innerText = s2;
     }
 
-    function resetBallDelivery() {
-        ball.x = 300; ball.y = 225;
-        ball.vx = currentGameNum === 1 ? 4.5 : -4.5;
-        ball.vy = (Math.random() - 0.5) * 3;
-        ball.speedType = 'normal';
-        turnOwner = currentGameNum === 1 ? 'p2' : 'p1';
-        isBallInPlay = true;
-    }
-
-    // 7. PHYSICS & RENDERING LOOP
+    // 8. PHYSICS ENGINE AND RENDERING LOOPS
     function updatePhysicsEngineLoop() {
-        processKeyboardInputs();
+        evaluatePaddleMovement();
 
-        if (isBallInPlay && !questionActive) {
+        // If a serve is pending, lock the ball tracking straight to the center lines of the server's racket
+        if (awaitingServe) {
+            if (currentServer === 'p1') {
+                ball.x = p1Paddle.x + p1Paddle.width + 8;
+                ball.y = p1Paddle.y + (p1Paddle.height / 2);
+            } else {
+                ball.x = p2Paddle.x - 8;
+                ball.y = p2Paddle.y + (p2Paddle.height / 2);
+            }
+        }
+
+        if (isBallInPlay && !questionActive && !awaitingServe) {
             ball.x += ball.vx;
             ball.y += ball.vy;
 
-            // Top/Bottom bounce boundary rules
+            // Bounce on horizontal borders
             if (ball.y <= 10 || ball.y >= canvas.height - 10) ball.vy = -ball.vy;
 
-            // Player 1 Collision (Left Side Intercept Line)
+            // Left Side Intersection Boundary Check (Player 1 Racket Line)
             if (ball.x <= p1Paddle.x + p1Paddle.width && ball.vx < 0) {
                 if (ball.y >= p1Paddle.y && ball.y <= p1Paddle.y + p1Paddle.height) {
-                    triggerQuestionSequence('p1');
+                    launchQuestionSequence('p1');
                 } else if (ball.x < p1Paddle.x - 12) {
+                    addCommentary("Ball breaks clean past Player 1's defenses!");
                     awardPoint('p2');
                 }
             }
 
-            // Player 2 or Computer Collision (Right Side Intercept Line)
+            // Right Side Intersection Boundary Check (Player 2 or Computer AI Racket Line)
             if (ball.x >= p2Paddle.x - 8 && ball.vx > 0) {
                 if (ball.y >= p2Paddle.y && ball.y <= p2Paddle.y + p2Paddle.height) {
-                    if (gameMode === 'pvp') {
-                        triggerQuestionSequence('p2');
+                    if (matchMode === 'pvp') {
+                        launchQuestionSequence('p2');
                     } else {
-                        // Computer AI return logic
-                        let slipChance = ball.speedType === 'smash' ? 0.45 : 0.08;
-                        if (Math.random() < slipChance) {
-                            addCommentary("The AI miscalculated the circuit transition speed! Point to Player.");
+                        // AI Intercept Evaluation System
+                        let slipRate = ball.speedType === 'smash' ? 0.42 : 0.08;
+                        if (Math.random() < slipRate) {
+                            addCommentary("The Computer AI misjudged the incoming smash velocity! Point to Player 1.");
                             awardPoint('p1');
                         } else {
                             ball.vx = -5.5; ball.speedType = 'normal';
                             ball.vy = (Math.random() - 0.5) * 4;
-                            addCommentary("Computer tracks down the shot and slices it back over.");
-                            turnOwner = 'p1';
+                            addCommentary("Computer registers clean alignment tracking parameters and clears the court.");
                         }
                     }
                 } else if (ball.x > p2Paddle.x + 12) {
+                    addCommentary(matchMode === 'pvp' ? "Ball flies clean past Player 2's racket boundary!" : "Mainframe AI fails to intercept the return line!");
                     awardPoint('p1');
                 }
             }
         }
 
-        renderGraphics();
+        renderGraphicsFrame();
         requestAnimationFrame(updatePhysicsEngineLoop);
     }
 
-    function renderGraphics() {
+    function renderGraphicsFrame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 3;
         
+        // Center Net Line
         ctx.beginPath(); ctx.setLineDash([10, 10]);
         ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height);
         ctx.stroke(); ctx.setLineDash([]);
@@ -514,7 +592,7 @@
         ctx.fillStyle = "#e63946";
         ctx.fillRect(p2Paddle.x, p2Paddle.y, p2Paddle.width, p2Paddle.height);
 
-        // Ball Node
+        // Ball Graphics
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         if (ball.speedType === 'smash') {
