@@ -3,170 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GCSE Electronics: Grand Slam Ultimate Touch Arena</title>
+    <title>GCSE Electronics: Grand Slam Ultimate Edition</title>
     <style>
         :root {
-            --grass-green: #38b000;
+            --grass-green: #2a9d8f;
             --court-line: #ffffff;
-            --court-blue: #0077b6;
-            --ball-yellow: #ccff00;
+            --court-blue: #1d3557;
+            --neon-ball: #ccff00;
             --panel-bg: #f8f9fa;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #74c69d, #40916c);
+            background: linear-gradient(135deg, #a8dadc, #457b9d);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #1b4332;
+            color: #1d3557;
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
         }
 
-        /* Initial Screen Menu */
+        /* Startup Window Screen */
         #setup-menu {
             background: white;
-            border: 4px solid var(--court-blue);
+            border: 5px solid var(--court-blue);
             border-radius: 16px;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
-            max-width: 540px;
+            max-width: 550px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            display: block; /* Forces show at startup */
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+            display: block;
             box-sizing: border-box;
+            margin-top: 20px;
         }
 
         .menu-btn {
-            background: var(--court-blue);
+            background: #e63946;
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 15px 25px;
+            border-radius: 10px;
+            padding: 16px 20px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin: 10px 0;
+            margin: 12px 0;
             width: 100%;
-            transition: background 0.2s, transform 0.1s;
-            box-sizing: border-box;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        .menu-btn:hover { background: #005683; transform: translateY(-2px); }
+        .menu-btn:hover { background: #c1121f; transform: translateY(-2px); }
 
         .game-container {
-            display: none; /* Hidden until menu button clicked */
+            display: none; /* Strictly hidden until mode selection is active */
             gap: 15px;
             max-width: 1200px;
             width: 100%;
-            flex-wrap: wrap;
+            margin-top: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
-        /* Interactive Court and Touch Layout Container */
         .court-interface-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             position: relative;
         }
 
         .court-wrapper {
             position: relative;
             background-color: var(--grass-green);
-            border: 6px solid #2d6a4f;
-            border-radius: 12px;
+            border: 6px solid #145a32;
+            border-radius: 14px;
             padding: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.4);
         }
 
         #tennisCanvas {
             background-color: var(--court-blue);
-            border: 4px solid var(--court-line);
+            border: 5px solid var(--court-line);
             display: block;
-            border-radius: 4px;
+            border-radius: 6px;
             max-width: 100%;
             height: auto;
         }
 
-        /* Touch Control Paddles Styling */
+        /* Translucent Tactile Touch Arrows */
         .touch-pad-column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
         }
 
         .touch-arrow-btn {
-            width: 65px;
-            height: 90px;
-            background: rgba(255, 255, 255, 0.2);
+            width: 70px;
+            height: 95px;
+            background: rgba(255, 255, 255, 0.25);
             border: 3px solid white;
-            border-radius: 14px;
+            border-radius: 16px;
             color: white;
-            font-size: 32px;
+            font-size: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            user-select: none;
-            -webkit-user-select: none;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.25);
             touch-action: none;
             transition: background 0.1s, transform 0.05s;
         }
         .touch-arrow-btn:active {
-            background: rgba(255, 255, 255, 0.7);
-            color: #1b4332;
-            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--court-blue);
+            transform: scale(0.93);
         }
 
         .side-panel {
             flex: 1;
             background: var(--panel-bg);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 320px;
+            min-width: 310px;
             box-sizing: border-box;
         }
 
         .scoreboard {
-            background: #212529;
+            background: #1d3557;
             color: #fff;
             border-radius: 8px;
-            padding: 15px;
+            padding: 14px;
             text-align: center;
             font-family: 'Courier New', monospace;
+            border: 2px solid #457b9d;
         }
 
         .score-row {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
-            margin: 5px 0;
+            font-size: 17px;
+            margin: 6px 0;
+            align-items: center;
         }
 
-        .score-val { font-weight: bold; color: var(--ball-yellow); font-size: 22px; }
+        .score-val { font-weight: bold; color: var(--neon-ball); font-size: 24px; }
 
-        /* Quiz Pop-Up Overlays */
+        /* Quiz Pop-up Dialog */
         .quiz-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.98);
-            border: 4px solid #ffb703;
+            background: rgba(255, 255, 255, 0.99);
+            border: 5px solid #ffb703;
             border-radius: 16px;
-            width: 92%;
-            max-width: 530px;
+            width: 94%;
+            max-width: 520px;
             padding: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             display: none;
             z-index: 10;
             box-sizing: border-box;
@@ -177,70 +178,70 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #e9ecef;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .timer-badge {
-            background: #ffb703; color: #000; padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 14px;
+            background: #ffb703; color: #000; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 13px;
         }
 
         .option-btn {
             background: #ffffff; border: 2px solid #ced4da; border-radius: 8px; color: #212529;
-            padding: 14px; margin: 8px 0; width: 100%; text-align: left; font-size: 14.5px;
-            font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit;
+            padding: 14px; margin: 8px 0; width: 100%; text-align: left; font-size: 14px;
+            font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit;
             box-sizing: border-box;
         }
-        .option-btn:hover { background: #e3f2fd; border-color: var(--court-blue); }
+        .option-btn:hover { background: #e3f2fd; border-color: #457b9d; }
 
         .commentary-box {
-            background: #e9f5db; border-left: 5px solid #718355; padding: 12px; border-radius: 4px;
-            height: 110px; overflow-y: auto; font-size: 13px; color: #4f5d3d;
+            background: #f1faee; border-left: 5px solid #457b9d; padding: 10px; border-radius: 4px;
+            height: 100px; overflow-y: auto; font-size: 13px; color: #1d3557;
         }
 
-        .shot-alert { font-weight: bold; text-transform: uppercase; font-size: 18px; text-align: center; margin: 8px 0; min-height: 22px; }
+        .shot-alert { font-weight: bold; text-transform: uppercase; font-size: 18px; text-align: center; margin: 6px 0; min-height: 22px; }
         
-        /* Tap or Press Space to Serve Button Indicator */
+        /* Tap or Space Serving Intermediary */
         .serve-prompt {
             position: absolute;
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(230, 57, 70, 0.95);
+            background: #e63946;
             color: #fff;
-            padding: 16px 28px;
+            padding: 16px 26px;
             border-radius: 35px;
             font-weight: bold;
             font-size: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             text-align: center;
             display: none;
-            cursor: pointer; /* Makes it clickable on touch screen */
-            border: 2px solid #fff;
+            cursor: pointer;
+            border: 3px solid #fff;
             z-index: 5;
-            animation: bouncePulse 1s infinite alternate;
+            animation: pulseServe 0.8s infinite alternate;
         }
-        @keyframes bouncePulse {
-            0% { transform: translate(-50%, -50%) scale(0.96); }
-            100% { transform: translate(-50%, -50%) scale(1.04); }
+        @keyframes pulseServe {
+            0% { transform: translate(-50%, -50%) scale(0.95); }
+            100% { transform: translate(-50%, -50%) scale(1.05); }
         }
     </style>
 </head>
 <body>
 
 <div id="setup-menu">
-    <h2 style="color: var(--court-blue); margin-top:0; font-size: 24px;">🎾 GCSE ELECTRONICS REVISION GRAND SLAM</h2>
-    <p style="color: #4f5d3d; font-size: 14px; margin-bottom: 20px;">Select your layout configuration to map digital logic circuits to the court:</p>
+    <h2 style="color: #1d3557; margin-top:0; font-size: 24px;">🎾 GCSE ELECTRONICS COUNTERS GAME</h2>
+    <p style="color: #457b9d; font-size: 14px; margin-bottom: 20px;">Choose a match mode to launch the dynamic 52-question circuit deck:</p>
     
-    <button class="menu-btn" onclick="initializeMatchMode('pve')">👤 1 Player vs. Computer Mainframe AI</button>
-    <button class="menu-btn" style="background-color: var(--grass-green);" onclick="initializeMatchMode('pvp')">👥 2 Player Local Versus Mode (Same Screen)</button>
+    <button class="menu-btn" style="background-color: #1d3557;" onclick="beginMatch('pve')">👤 1 Player vs. Computer AI</button>
+    <button class="menu-btn" style="background-color: #2a9d8f;" onclick="beginMatch('pvp')">👥 2 Player Local Versus (Same Device Screen)</button>
     
-    <div style="font-size:12.5px; color: #444; text-align:left; margin-top:20px; background: #f1f3f5; padding:15px; border-radius:8px; line-height: 1.5;">
-        <b>🕹️ Touch &amp; Keyboard Control Protocols:</b><br>
-        • <b>Touchscreen:</b> Use the on-screen side arrows (▲ / ▼) to slide paddles. Tap the red banner to serve!<br>
-        • <b>Player 1 (Left Side):</b> Keyboard <b>W / S</b> keys.<br>
-        • <b>Player 2 (Right Side):</b> Keyboard <b>UP / DOWN</b> Arrow keys.<br>
-        • <b>Serving:</b> Press <b>SPACEBAR</b> or tap the on-screen banner to execute a serve.
+    <div style="font-size:12.5px; color: #333; text-align:left; margin-top:20px; background: #f1f3f5; padding:12px; border-radius:8px; line-height: 1.5; border-left: 4px solid #e63946;">
+        <b>🎮 Controls Guide:</b><br>
+        • <b>On Mobile/Tablet:</b> Hold the on-screen side arrows (▲ / ▼) to move. Tap the red banner to Serve.<br>
+        • <b>Player 1 (Left Side):</b> Press <b>W</b> (Up) and <b>S</b> (Down) on your keyboard.<br>
+        • <b>Player 2 (Right Side):</b> Press the <b>UP</b> and <b>DOWN</b> arrow keys.<br>
+        • <b>To Serve:</b> Hit the <b>SPACEBAR</b> or touch the pulsing red banner target!
     </div>
 </div>
 
@@ -255,14 +256,14 @@
         <div class="court-wrapper">
             <canvas id="tennisCanvas" width="600" height="420"></canvas>
             
-            <div id="serve-indicator-box" class="serve-prompt" onclick="executeServiceLaunch()">TOUCH OR PRESS SPACE TO SERVE</div>
+            <div id="serve-indicator-box" class="serve-prompt" onclick="triggerServiceLaunch()">TOUCH OR PRESS SPACE TO SERVE</div>
 
             <div id="quiz-overlay" class="quiz-overlay">
                 <div class="quiz-header">
-                    <span style="font-weight: bold; color: var(--court-blue);" id="shot-side-title">🎾 CIRCUIT VOLLEY OVERRIDE</span>
+                    <span style="font-weight: bold; color: #1d3557;" id="shot-side-title">🎯 CIRCUIT OVERRIDE SHOT</span>
                     <span class="timer-badge" id="shot-timer">Timer: 0.0s</span>
                 </div>
-                <p id="question-text" style="font-weight: 500; font-size: 14.5px; margin-top: 0; line-height:1.45; color:#212529;"></p>
+                <p id="question-text" style="font-weight: 600; font-size: 15px; margin-top: 0; line-height:1.45; color:#1d3557;"></p>
                 <div id="options-container"></div>
             </div>
         </div>
@@ -275,9 +276,9 @@
 
     <div class="side-panel">
         <div>
-            <h3 style="margin-top:0; border-bottom: 2px solid #dee2e6; padding-bottom:5px; font-size: 16px;">📊 SYSTEM STATUS LOG</h3>
+            <h3 style="margin-top:0; border-bottom: 2px solid #dee2e6; padding-bottom:5px; font-size: 16px;">📊 REVISION SCOREBOARD</h3>
             <div class="scoreboard">
-                <div style="font-size:12px; color: #ccff00; font-weight:bold; margin-bottom: 8px;" id="server-turn-display">SERVER INITIALIZING...</div>
+                <div style="font-size:12px; color: var(--neon-ball); font-weight:bold; margin-bottom: 8px;" id="server-turn-display">AWAITING SYSTEM BOOT...</div>
                 <div class="score-row">
                     <span id="p1-label">👤 PLAYER 1 (LEFT)</span>
                     <span class="score-val" id="p1-tennis-score">0</span>
@@ -286,71 +287,99 @@
                     <span id="p2-label">🤖 COMPUTER AI</span>
                     <span class="score-val" id="p2-tennis-score">0</span>
                 </div>
-                <div style="border-top: 1px dashed #444; margin-top: 10px; padding-top: 5px; font-size: 13px; display: flex; justify-content: space-around;">
-                    <span>Match Set Profile: <b id="current-game-num">1/2</b></span>
+                <div style="border-top: 1px dashed #457b9d; margin-top: 10px; padding-top: 5px; font-size: 13px;">
+                    <span>Match Game: <b id="current-game-num">1/2</b></span>
                 </div>
             </div>
         </div>
 
         <div>
             <div id="shot-alert-text" class="shot-alert"></div>
-            <h4 style="margin: 5px 0; font-size:14px;">🎙️ MATCH LIVE COMMENTARY</h4>
+            <h4 style="margin: 5px 0; font-size:14px;">🎙️ LIVE COURT FEED</h4>
             <div id="commentary" class="commentary-box">
-                Awaiting circuit mode parameter choice allocations...
+                System initialized. Choose a mode to generate data banks.
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. DIVERSED 100-QUESTION BANK SYLLABUS BUILDER
-    function generate100SyllabusQuestions() {
-        let pool = [
-            { q: "What distinguishes a bistable latch system from an astable multivibrator system?", a: ["It possesses two completely stable states and requires external pulses to switch", "It continuously oscillates back and forth automatically without clock inputs", "It has zero valid stable output configurations", "It operates exclusively with pure analogue feedback variables"], correct: "It possesses two completely stable states and requires external pulses to switch" },
-            { q: "On a conventional sub-circuit schematic block diagram, what does the 'S' pin input line represent?", a: ["Set input parameter", "Synchronous source line", "Shift active register", "Schmitt trigger terminal"], correct: "Set input parameter" },
-            { q: "If the RESET line of an SR bistable goes high while the SET line stays low, what occurs at output Q?", a: ["Q goes LOW logic 0", "Q goes HIGH logic 1", "Q matches the clock frequency", "Q enters a floating high-impedance state"], correct: "Q goes LOW logic 0" },
-            { q: "What does the expression 'NOT Q' (represented as Q with a line over it) mathematically indicate?", a: ["The exact inverted complement value of output Q", "The master system clock override voltage input", "The maximum voltage reference line", "An internal processing logic error flag state"], correct: "The exact inverted complement value of output Q" },
-            { q: "At what moment does a standard rising-edge triggered D-type flip-flop sample and clone data from D to Q?", a: ["The exact millisecond the clock pulse transitions from LOW to HIGH", "The exact millisecond the clock pulse transitions from HIGH to LOW", "Throughout the whole duration that the clock pin stays HIGH logic 1", "Continuously at all times completely bypassing clock states"], correct: "The exact millisecond the clock pulse transitions from LOW to HIGH" },
-            { q: "Why are asynchronous ripple counters called 'asynchronous'?", a: ["Each successive stage flip-flop is clocked by the output of the preceding stage", "All stages are tied directly to one identical master clock node", "The system calculates exclusively odd number increments", "It operates entirely without implementing logic flip-flops"], correct: "Each successive stage flip-flop is clocked by the output of the preceding stage" },
-            { q: "A 3-bit binary counter has a maximum absolute count configuration capacity of what decimal value?", a: ["7 (Counts 0 up to 7)", "8 (Counts 1 up to 8)", "3 (Counts 0 up to 3)", "15 (Counts 0 up to 15)"], correct: "7 (Counts 0 up to 7)" },
-            { q: "If a 4-bit binary counter provides bit lines D, C, B, A (where D is MSB), what pattern represents decimal 10?", a: ["1010", "0101", "1100", "0110"], correct: "1010" },
-            { q: "To build a clean recycling Modulo-5 counter, what logic values should hook into the clear/reset AND gate inputs?", a: ["Outputs C and A (representing binary 4 and 1)", "Outputs C and B (representing binary 4 and 2)", "Outputs B and A (representing binary 2 and 1)", "Outputs D and A (representing binary 8 and 1)"], correct: "Outputs C and A (representing binary 4 and 1)" },
-            { q: "What does the abbreviation 'BCD' stand for in sequential digital circuitry layouts?", a: ["Binary Coded Decimal", "Bistable Clock Division", "Base Count Decoder", "Buffered Control Driver"], correct: "Binary Coded Decimal" },
-            { q: "What is the maximum single digit column decimal value handled before a standard BCD register wraps?", a: ["9", "15", "10", "16"], correct: "9" },
-            { q: "What specific line response pattern is witnessed across output pins of a 4017 decade counter chip on successive clock ticks?", a: ["Precisely one single output line goes HIGH sequentially while all remaining stay LOW", "All 10 lines output binary coded integers concurrently", "Pins toggle randomly based on structural leakage levels", "All outputs pulse HIGH simultaneously together"], correct: "Precisely one single output line goes HIGH sequentially while all remaining stay LOW" },
-            { q: "In a synchronous binary counter network, how are all the internal clock lines configured?", a: ["They are connected in parallel to the exact same shared primary master clock input", "They daisy-chain sequentially from Q outputs down to succeeding clocks", "They feed through offset capacitor propagation elements", "They are isolated and left entirely floating to avoid cross-talk"], correct: "They are connected in parallel to the exact same shared primary master clock input" },
-            { q: "If a 600Hz square wave serves as the clock source to a single D-type flip-flop configured as a divide-by-2 element, what is the output frequency?", a: ["300Hz", "1200Hz", "600Hz", "150Hz"], correct: "300Hz" },
-            { q: "What logic gate type is used to construct feedback clear lines to reset counters early?", a: ["AND Gate", "OR Gate", "NOT Gate", "NOR Gate"], correct: "AND Gate" }
+    // 1. EMBEDDED MASTER BANK OF 52 HIGH-QUALITY UNIQUE GCSE ELECTRONICS QUESTIONS
+    function loadFullSyllabusDatabase() {
+        return [
+            { q: "Which statement accurately describes a bistable system?", a: ["It has two stable states and remains in one until an external pulse triggers a change", "It continuously fluctuates and oscillates back and forth automatically", "It features zero stable electrical output configurations", "It is used exclusively to amplify variable analogue voice frequencies"], correct: "It has two stable states and remains in one until an external pulse triggers a change" },
+            { q: "In an SR bistable built from NOR gates, what happens when both Set and Reset inputs are held at logic 0?", a: ["The output remains unchanged in its current latch state", "The output instantly flips into a high-frequency oscillation cycle", "Both outputs Q and NOT Q simultaneously lock into logic 1", "The counter immediately clears itself back to decimal zero"], correct: "The output remains unchanged in its current latch state" },
+            { q: "What specific input combination is considered invalid or forbidden for a basic SR bistable latch?", a: ["Set = 1 and Reset = 1 at the same time", "Set = 0 and Reset = 0 at the same time", "Set = 1 and Reset = 0 at the same time", "Set = 0 and Reset = 1 at the same time"], correct: "Set = 1 and Reset = 1 at the same time" },
+            { q: "What does the 'D' strictly stand for in a D-type flip-flop circuit?", a: ["Data", "Delay", "Digital", "Divider"], correct: "Data" },
+            { q: "When does a rising-edge triggered D-type flip-flop sample and copy its input value from D to output Q?", a: ["At the exact moment the clock transitions from LOW to HIGH (0 to 1)", "At the exact moment the clock transitions from HIGH to LOW (1 to 0)", "Continuously the entire time that the clock pin stays at logic 1", "Whenever the input D line alters its state, ignoring the clock entirely"], correct: "At the exact moment the clock transitions from LOW to HIGH (0 to 1)" },
+            { q: "If the input D line of a flip-flop is sitting at logic 1, what happens to output Q when a valid clock edge hits?", a: ["Q switches to or stays at logic 1", "Q switches to or stays at logic 0", "Q toggles to the opposite inversion of its current state", "Q floats into an unpredictable high-impedance state"], correct: "Q switches to or stays at logic 1" },
+            { q: "What is the primary feature of asynchronous Set (S) and Reset (R) lines on a D-type flip-flop?", a: ["They override the clock signal and change outputs instantly", "They wait and execute only on the next rising clock pulse edge", "They regulate the frequency threshold of incoming waveforms", "They adjust the voltage tolerance levels of the silicon chip"], correct: "They override the clock signal and change outputs instantly" },
+            { q: "How many independent binary bits of data can a single D-type flip-flop securely store?", a: ["1 bit", "2 bits", "4 bits", "8 bits"], correct: "1 bit" },
+            { q: "Why is an asynchronous ripple counter referred to as 'asynchronous'?", a: ["The internal flip-flops are not clocked by the same master clock node at the same time", "It does not require an active power supply rail to maintain numbers", "It sequences numbers in a fully randomized mathematical layout", "It processes incoming signals using purely variable analogue elements"], correct: "The internal flip-flops are not clocked by the same master clock node at the same time" },
+            { q: "In a multi-bit binary ripple counter, which stage toggles on every single input clock pulse?", a: ["The first stage (Least Significant Bit)", "The final stage (Most Significant Bit)", "Every stage toggles simultaneously on each clock edge", "Only the second intermediate binary stage line"], correct: "The first stage (Least Significant Bit)" },
+            { q: "What is the absolute highest decimal number a 4-bit binary counter can reach before wrapping to 0000?", a: ["15", "16", "7", "9"], correct: "15" },
+            { q: "How many cascading flip-flops are required to build a counter that reaches up to decimal 31?", a: ["5 flip-flops", "4 flip-flops", "6 flip-flops", "32 flip-flops"], correct: "5 flip-flops" },
+            { q: "What design flaw restricts the use of asynchronous ripple counters at extreme high frequencies?", a: ["Accumulated propagation delays causing transient false states (glitches)", "They draw double the current load of equivalent synchronous rigs", "They lose the ability to count upward and can only count downward", "The integrated circuit overheats when it returns to a zero count"], correct: "Accumulated propagation delays causing transient false states (glitches)" },
+            { q: "In a synchronous binary counter network, how are all internal clock lines physically wired?", a: ["They are connected in parallel to the exact same master clock source line", "Each stage clock is driven by the Q output of the preceding flip-flop", "They are separated using external series resistor buffer layouts", "They are passed through discrete inverting NOT gates successively"], correct: "They are connected in parallel to the exact same master clock source line" },
+            { q: "What logic gate type is used to intercept specific counts to trigger an early clear on a counter?", a: ["AND Gate", "OR Gate", "XOR Gate", "NOT Gate"], correct: "AND Gate" },
+            { q: "To transform a 4-bit counter (Outputs D, C, B, A where D is MSB) into a Modulo-10 decade counter, where must the reset lines connect?", a: ["Outputs D and B (representing values 8 and 2)", "Outputs D and C (representing values 8 and 4)", "Outputs C and B (representing values 4 and 2)", "Outputs C and A (representing values 4 and 1)"], correct: "Outputs D and B (representing values 8 and 2)" },
+            { q: "What 4-bit binary pattern (DCBA) is generated to represent decimal 6?", a: ["0110", "1100", "0011", "1010"], correct: "0110" },
+            { q: "What sequence does a Binary Coded Decimal (BCD) counter execute immediately after displaying decimal 9?", a: ["It recycles back to 0000 on the following clock pulse", "It advances smoothly forward to count up to decimal 15", "It locks up completely until a manual override button is pressed", "It flips all four output lines to maximum logic high values"], correct: "It recycles back to 0000 on the following clock pulse" },
+            { q: "How many individual bits are explicitly used to encode one single decimal digit column in BCD?", a: ["4 bits", "2 bits", "8 bits", "10 bits"], correct: "4 bits" },
+            { q: "What is the unique operational behavior of a 4017 decade counter chip?", a: ["It sequentially drives exactly one of ten separate outputs HIGH per clock tick", "It produces a standard 4-bit binary weighted text string output", "It stores a single data bit parameter on a rising clock margin", "It runs an internal feedback loop to output continuous square waves"], correct: "It sequentially drives exactly one of ten separate outputs HIGH per clock tick" },
+            { q: "What occurs across the output field of a 4017 counter chip when its Reset pin goes HIGH?", a: ["Output 0 latches HIGH while outputs 1 through 9 go completely LOW", "All ten output pins pulse into maximum logic high voltage together", "The system freezes and latches onto whatever line was active", "The chip changes its direction matrix to count backwards"], correct: "Output 0 latches HIGH while outputs 1 through 9 go completely LOW" },
+            { q: "If an explicit 1000Hz clock line links to a single D-type flip-flop acting as a divide-by-2 element, what is the output frequency?", a: ["500Hz", "2000Hz", "1000Hz", "250Hz"], correct: "500Hz" },
+            { q: "A master clock of 2400Hz streams down three successive divide-by-2 flip-flop steps. What is the output?", a: ["300Hz", "800Hz", "600Hz", "1200Hz"], correct: "300Hz" },
+            { q: "Which architecture completely rules out propagation glitch risks by clocking all flip-flops together?", a: ["Synchronous counter", "Asynchronous ripple counter", "Decade ripple counter", "Modulo-7 feedback counter"], correct: "Synchronous counter" },
+            { q: "What is the requirement for the 'Clock Enable' (CE) line on a 4017 counter chip to allow counting?", a: ["It must be held at a steady LOW state (logic 0)", "It must receive a voltage surge matching the main input", "It must be pulsed continuously at twice the frequency rate", "It must be left completely open-circuit and disconnected"], correct: "It must be held at a steady LOW state (logic 0)" },
+            { q: "In a 3-bit binary upward counter, what state follows binary 111 on the next clock pulse?", a: ["000", "100", "001", "110"], correct: "000" },
+            { q: "Which logic gate provides a HIGH output only when its inputs are unequal, useful in specific counting logic?", a: ["XOR Gate", "AND Gate", "OR Gate", "NOR Gate"], correct: "XOR Gate" },
+            { q: "To build an early reset loop that wipes a counter when it hits decimal 5 (0101), what lines feed the reset gate?", a: ["Outputs C and A", "Outputs D and B", "Outputs B and A", "Outputs C and B"], correct: "Outputs C and A" },
+            { q: "What notation labels are assigned to the two primary complementary outputs of a D-type flip-flop?", a: ["Q and NOT Q", "Set and Reset", "Data and Clock", "Input and Output"], correct: "Q and NOT Q" },
+            { q: "What is the definition of a digital latch circuit?", a: ["A sequential circuit configuration capable of holding 1 bit of memory data", "A heavy mechanical safety disconnect switch for current loads", "A directional diode network that blocks negative polarity waves", "An active clock source module that drives system synchronization"], correct: "A sequential circuit configuration capable of holding 1 bit of memory data" },
+            { q: "What does an active-low input on a digital component mean?", a: ["It executes its internal function when pulled down to logic 0 volts", "It uses zero quiescent current whenever the line goes high", "It operates at double the toggle speed of an active-high line", "It establishes a protection layer to stop overvoltage spikes"], correct: "It executes its internal function when pulled down to logic 0 volts" },
+            { q: "If an extended binary counter incorporates exactly 6 flip-flops, how many distinct count states exist?", a: ["64", "32", "12", "16"], correct: "64" },
+            { q: "What electronic block is ideal for removing noise and contact bounce from a mechanical push switch?", a: ["An SR bistable latch", "An asynchronous ripple circuit", "A 4017 decade chip array", "A single standalone capacitor element"], correct: "An SR bistable latch" },
+            { q: "What occurs if a 4-bit binary down-counter receives an active clock trigger while sitting at state 0000?", a: ["It rolls over to maximum state 1111", "It locks up and freezes securely at 0000", "All output lines shut off and float to high impedance", "It sets its values directly to middle parameter 1000"], correct: "It rolls over to maximum state 1111" },
+            { q: "What does it mean if a flip-flop is specified as 'falling-edge triggered'?", a: ["It reads input values only when the clock signal moves from 1 down to 0", "It reads input values only when the clock signal moves from 0 up to 1", "It cuts off its operational rails when battery voltage sags", "Its outputs are constrained to operate at low voltage specs"], correct: "It reads input values only when the clock signal moves from 1 down to 0" },
+            { q: "In a multi-stage BCD cascading decimal display, what increments the tens-column counter stage?", a: ["The moment the preceding units counter rolls from 9 back to 0", "Every single primary master system pulse arriving from the clock", "The exact moment the units counter crosses decimal 5", "A manual reset pulse arriving from an external button switch"], correct: "The moment the preceding units counter rolls from 9 back to 0" },
+            { q: "Why is a standard 4-bit binary counter also designated a Modulo-16 counter?", a: ["It contains exactly 16 discrete states ranging from decimal 0 to 15", "It multiplies any target input frequency value by 16", "It requires 16 separate power line inputs to actuate gates", "It forces an auto-shutdown sequence when count 16 is hit"], correct: "It contains exactly 16 discrete states ranging from decimal 0 to 15" },
+            { q: "What operation does a Modulo-8 counter do on the 8th successive clock edge if initialized at 0?", a: ["It cycles from maximum value 7 directly back to 0", "It shows decimal 8 across its pin layout lines", "It hangs up and halts until a hardware reset lines fires", "It pulses an error signal to indicate overflow"], correct: "It cycles from maximum value 7 directly back to 0" },
+            { q: "How do you wire a D-type flip-flop to act as a divide-by-2 frequency divider element?", a: ["Connect the NOT Q output line directly back into the D input line", "Connect the Q output line directly down into the Clock pin", "Tie both Set and Reset pins directly to logic 1 voltage rails", "Wire an external feedback AND gate across the output grid"], correct: "Connect the NOT Q output line directly back into the D input line" },
+            { q: "In digital counter telemetry, what is a glitch?", a: ["A temporary spurious logic spike caused by mismatched internal gate delays", "A terminal hardware blowout that ruins the silicon junction layer", "An intentional reset trigger generated at the midpoint of a count", "The absolute maximum safe voltage threshold for a CMOS input"], correct: "A temporary spurious logic spike caused by mismatched internal gate delays" },
+            { q: "What class of counter device is a standard 74HC93 4-bit integrated circuit component?", a: ["An asynchronous ripple counter", "A synchronous decade tracking counter", "A hardware bistable debounce toggle latch", "A sequential ring shift counter array"], correct: "An asynchronous ripple counter" },
+            { q: "What numerical pattern does a 2-bit binary upward counter repeat continuously?", a: ["00, 01, 10, 11, then recycles to 00", "00, 11, 10, 01, then recycles to 00", "01, 10, 11, 00, then stays latched at 00", "00, 10, 01, 11, then recycles to 00"], correct: "00, 01, 10, 11, then recycles to 00" },
+            { q: "What occurs if you leave the Data (D) input line of a high-speed CMOS flip-flop completely floating?", a: ["Its logic state turns erratic and unstable due to ultra-high input impedance", "It drops down and remains locked at a highly stable logic 0", "It pulls up and remains locked at a highly stable logic 1", "The device enters an automated thermal protection standby mode"], correct: "Its logic state turns erratic and unstable due to ultra-high input impedance" },
+            { q: "Which logic gate outputs a 0 only when all inputs are 1, often working inside active-low clear lines?", a: ["NAND Gate", "NOR Gate", "XOR Gate", "OR Gate"], correct: "NAND Gate" },
+            { q: "How many active states are processed inside a Modulo-7 counter structure?", a: ["7 discrete states ranging from 0 up to 6", "8 discrete states ranging from 0 up to 7", "6 discrete states ranging from 1 up to 6", "14 discrete states ranging from 0 up to 13"], correct: "7 discrete states ranging from 0 up to 6" },
+            { q: "If a custom digital counter resets to zero the instant its outputs hit binary 1100, what is its Modulo?", a: ["Modulo-12", "Modulo-11", "Modulo-13", "Modulo-4"], correct: "Modulo-12" },
+            { q: "What does cascading counters allow you to do?", a: ["Link multiple small counter ICs together to scale up the count capacity", "Increase the maximum safe operating voltage threshold of a circuit", "Force an asynchronous ripple circuit to act as a synchronous circuit", "Shorten propagation delay values across sequential systems"], correct: "Link multiple small counter ICs together to scale up the count capacity" },
+            { q: "What data coding system is used to convert counter data to run numeric 7-segment character blocks?", a: ["BCD (Binary Coded Decimal)", "Gray code format", "Hexadecimal alphanumeric ASCII characters", "Variable multi-level analogue voltage waves"], correct: "BCD (Binary Coded Decimal)" },
+            { q: "What feature on an oscilloscope lets you check the timing relationship between a clock input and counter outputs?", a: ["Dual-channel or multi-channel digital storage tracking modes", "Analogue internal frequency modulation tuning keys", "An integrated high-fidelity sound speaker tracking engine", "An adjustable high-attenuation voltage probe toggle switch"], correct: "Dual-channel or multi-channel digital storage tracking modes" },
+            { q: "What logic level must be maintained on a standard active-high Reset pin during normal counter operation?", a: ["Logic 0 (LOW state)", "Logic 1 (HIGH state)", "Alternating continuously at the exact same rate as the clock frequency", "Left entirely open-circuit and allowed to float free"], correct: "Logic 0 (LOW state)" },
+            { q: "Which circuit counts seamlessly from 0 to 3 using exactly two discrete bistable elements?", a: ["A 2-bit binary counter", "A 4-bit asynchronous ripple counter", "A 4017 sequential decade counter chip", "An array of independent SR latch gates"], correct: "A 2-bit binary counter" },
+            { q: "What primary difference sets a digital counter apart from a standard shift register?", a: ["Counters advance through a fixed mathematical sequence while registers pass data along", "Counters run free without clocks while registers mandate solid clock sources", "Shift registers are built from gates while counters use only resistive parts", "Counters process analogue waveforms while shift registers process binary text"], correct: "Counters advance through a fixed mathematical sequence while registers pass data along" }
         ];
-
-        // Fill up to 100 questions using distinct dynamic algorithmic variants
-        for(let i=1; i<=85; i++) {
-            let baseFreq = 200 * (i % 4 + 1);
-            pool.push({
-                q: `[Logic Frequency Test Module #${i}] A multi-stage ripple counter receives an initial input clock source registering ${baseFreq} Hz at its first stage. What output frequency is registered at the output of the third successive divide-by-2 flip-flop stage?`,
-                a: [`${baseFreq / 8} Hz`, `${baseFreq / 4} Hz`, `${baseFreq / 2} Hz`, `${baseFreq * 2} Hz`],
-                correct: `${baseFreq / 8} Hz`
-            });
-        }
-        return pool;
     }
 
-    let quizDatabase = generate100SyllabusQuestions();
-    quizDatabase.sort(() => Math.random() - 0.5); // Initial master deck shuffle
+    let quizDatabase = loadFullSyllabusDatabase();
+    // Double-shuffle deck array
+    quizDatabase.sort(() => Math.random() - 0.5);
     let quizPointer = 0;
 
-    // 2. STATE VARIABLE MATRICES
+    // 2. RUNTIME TELEMETRY DEFINITIONS
     let gameMode = 'pve'; 
-    let tennisPointsLabels = ["0", "15", "30", "40", "Game"];
-    let p1ScoreIdx = 0; let p2ScoreIdx = 0;
+    let tennisLabelArray = ["0", "15", "30", "40", "Game"];
+    let p1Points = 0; let p2Points = 0;
     let currentGameNum = 1; 
 
     const canvas = document.getElementById('tennisCanvas');
     const ctx = canvas.getContext('2d');
 
-    let ball = { x: 300, y: 210, vx: 0, vy: 0, radius: 8, speedType: 'normal' };
-    let p1Paddle = { x: 40, y: 170, width: 12, height: 80 };
-    let p2Paddle = { x: 548, y: 170, width: 12, height: 80 };
+    // Enhanced thickness parameters for perfect racket detection and visibility
+    let ball = { x: 300, y: 210, vx: 0, vy: 0, radius: 9, speedType: 'normal' };
+    let p1Paddle = { x: 25, y: 165, width: 16, height: 90 };
+    let p2Paddle = { x: 559, y: 165, width: 16, height: 90 };
 
     let isBallInPlay = false;
     let awaitingServe = true; 
@@ -362,77 +391,75 @@
     let keysPressed = {};
     let touchState = { p1Up: false, p1Down: false, p2Up: false, p2Down: false };
 
-    // 3. KEYBOARD LISTENERS (FOR PC USERS)
+    // 3. KEYBOARD EVENT ROUTER
     window.addEventListener('keydown', (e) => { 
         keysPressed[e.key.toLowerCase()] = true; 
         if (e.key === " " || e.code === "Space") {
             e.preventDefault(); 
-            executeServiceLaunch();
+            triggerServiceLaunch();
         }
     });
     window.addEventListener('keyup', (e) => { keysPressed[e.key.toLowerCase()] = false; });
 
-    // 4. TOUCHSCREEN POINTER ACTIONS MAPPING
-    function linkTouchButton(elementId, stateField) {
-        let el = document.getElementById(elementId);
-        if (!el) return;
+    // 4. HIGH-SPEED TACTILE TOUCH HANDLERS
+    function mapTouchTrigger(elementId, stateField) {
+        let btn = document.getElementById(elementId);
+        if (!btn) return;
 
-        // Cover mobile finger touch transitions
-        el.addEventListener('touchstart', (e) => {
+        btn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             touchState[stateField] = true;
         }, { passive: false });
 
-        el.addEventListener('touchend', (e) => {
+        btn.addEventListener('touchend', (e) => {
             e.preventDefault();
             touchState[stateField] = false;
         }, { passive: false });
 
-        el.addEventListener('touchcancel', (e) => {
+        btn.addEventListener('touchcancel', (e) => {
             e.preventDefault();
             touchState[stateField] = false;
         }, { passive: false });
 
-        // Cover desktop mouse interaction overrides on touch pads
-        el.addEventListener('mousedown', () => { touchState[stateField] = true; });
-        el.addEventListener('mouseup', () => { touchState[stateField] = false; });
-        el.addEventListener('mouseleave', () => { touchState[stateField] = false; });
+        // Backup pointer fallbacks for multi-input systems
+        btn.addEventListener('mousedown', () => { touchState[stateField] = true; });
+        btn.addEventListener('mouseup', () => { touchState[stateField] = false; });
+        btn.addEventListener('mouseleave', () => { touchState[stateField] = false; });
     }
 
-    // Connect control arrays
-    linkTouchButton('t-p1-up', 'p1Up');
-    linkTouchButton('t-p1-down', 'p1Down');
-    linkTouchButton('t-p2-up', 'p2Up');
-    linkTouchButton('t-p2-down', 'p2Down');
+    mapTouchTrigger('t-p1-up', 'p1Up');
+    mapTouchTrigger('t-p1-down', 'p1Down');
+    mapTouchTrigger('t-p2-up', 'p2Up');
+    mapTouchTrigger('t-p2-down', 'p2Down');
 
-    function addCommentary(msg) {
+    function logFeed(msg) {
         let box = document.getElementById('commentary');
-        box.innerHTML = `⚠️ ${msg}<br>` + box.innerHTML;
+        box.innerHTML = `⚡ ${msg}<br>` + box.innerHTML;
     }
 
-    function displayShotAlert(text, color) {
+    function pushShotAlert(text, color) {
         let el = document.getElementById('shot-alert-text');
         el.innerText = text; el.style.color = color;
     }
 
-    // 5. SCREEN DISPLAY AND GAME MODE SELECTOR
-    function initializeMatchMode(selectedMode) {
+    // 5. GAME START CONTROL PROTOCOL
+    function beginMatch(selectedMode) {
         gameMode = selectedMode;
         document.getElementById('setup-menu').style.display = "none";
         document.getElementById('match-mainframe').style.display = "flex";
         
         if (gameMode === 'pvp') {
             document.getElementById('p2-label').innerText = "👤 PLAYER 2 (RIGHT)";
-            addCommentary("Split head-to-head match ready. Left arrows/WS for P1, Right arrows for P2.");
+            logFeed("PVP Local Match initialized. Left inputs run P1, Right inputs run P2.");
         } else {
             document.getElementById('p2-label').innerText = "🤖 COMPUTER AI";
-            addCommentary("Solo mode engaged against standard AI core. You can use either side of touch buttons!");
+            logFeed("Solo Match active vs Computer AI. Touch controls on either side will move your racket!");
         }
         setupServingState();
-        requestAnimationFrame(gameEngineLoop);
+        requestAnimationFrame(mainPhysicsEngineLoop);
     }
 
-    // 6. SERVICE HANDLING RULES
+    // 6. SERVICE SEQUENCER
     function setupServingState() {
         isBallInPlay = false;
         awaitingServe = true;
@@ -441,19 +468,19 @@
         
         if (currentGameNum === 1) {
             currentServer = 'p1';
-            document.getElementById('server-turn-display').innerText = "SERVER: PLAYER 1 (LEFT)";
+            document.getElementById('server-turn-display').innerText = "SERVER ROLE: PLAYER 1 (LEFT)";
             ball.x = p1Paddle.x + p1Paddle.width + 10;
             ball.y = p1Paddle.y + (p1Paddle.height / 2);
         } else {
             currentServer = 'p2';
-            document.getElementById('server-turn-display').innerText = gameMode === 'pvp' ? "SERVER: PLAYER 2 (RIGHT)" : "SERVER: COMPUTER AI";
+            document.getElementById('server-turn-display').innerText = gameMode === 'pvp' ? "SERVER ROLE: PLAYER 2 (RIGHT)" : "SERVER ROLE: COMPUTER AI";
             ball.x = p2Paddle.x - 10;
             ball.y = p2Paddle.y + (p2Paddle.height / 2);
         }
         document.getElementById('serve-indicator-box').style.display = "block";
     }
 
-    function executeServiceLaunch() {
+    function triggerServiceLaunch() {
         if (!awaitingServe || questionActive) return;
         
         document.getElementById('serve-indicator-box').style.display = "none";
@@ -463,40 +490,40 @@
         if (currentServer === 'p1') {
             ball.vx = 4.8;
             ball.vy = (Math.random() - 0.5) * 3;
-            addCommentary("Player 1 releases a strong serve volley.");
+            logFeed("Player 1 executes a clean service line drive.");
         } else {
             ball.vx = -4.8;
             ball.vy = (Math.random() - 0.5) * 3;
-            addCommentary(gameMode === 'pvp' ? "Player 2 cleanly fires the serve!" : "Computer AI launches execution serve cycles.");
+            logFeed(gameMode === 'pvp' ? "Player 2 fires back a fast service trace." : "Computer core calculates vector and executes serve.");
         }
     }
 
-    // 7. QUESTION POP-UP LOOPS
-    function triggerQuestionSequence(activeSide) {
+    // 7. QUESTION POP-UP PANEL DRIVER
+    function deployQuestionOverlay(activeSide) {
         if (questionActive) return;
         questionActive = true;
         isBallInPlay = false;
 
-        // Extract current item
-        let activeQuestion = quizDatabase[quizPointer % quizDatabase.length];
-        document.getElementById('question-text').innerText = activeQuestion.q;
+        // Fetch completely unique question item from the 52-card array
+        let item = quizDatabase[quizPointer % quizDatabase.length];
+        document.getElementById('question-text').innerText = item.q;
 
-        let displayLabel = activeSide === 'p1' ? "PLAYER 1 (LEFT)" : (gameMode === 'pvp' ? "PLAYER 2 (RIGHT)" : "COMPUTER AI");
-        document.getElementById('shot-side-title').innerText = `🎯 DEFENSIVE SHOT: ${displayLabel}`;
+        let trackingLabel = activeSide === 'p1' ? "PLAYER 1 (LEFT)" : (gameMode === 'pvp' ? "PLAYER 2 (RIGHT)" : "COMPUTER AI");
+        document.getElementById('shot-side-title').innerText = `🔋 INPUT OVERRIDE: ${trackingLabel}`;
 
-        // Scramble choices completely on presentation
-        let answers = [...activeQuestion.a];
-        answers.sort(() => Math.random() - 0.5);
+        // Scramble multiple-choice button order every time a ball strikes a racket
+        let choiceArr = [...item.a];
+        choiceArr.sort(() => Math.random() - 0.5);
 
-        let container = document.getElementById('options-container');
-        container.innerHTML = "";
+        let holder = document.getElementById('options-container');
+        holder.innerHTML = "";
 
-        answers.forEach(text => {
+        choiceArr.forEach(ansText => {
             let btn = document.createElement('button');
             btn.className = "option-btn";
-            btn.innerText = text;
-            btn.onclick = function() { checkAnswerPayload(text, activeQuestion.correct, activeSide); };
-            container.appendChild(btn);
+            btn.innerText = ansText;
+            btn.onclick = function() { evaluateShotResponse(ansText, item.correct, activeSide); };
+            holder.appendChild(btn);
         });
 
         responseTimer = 0;
@@ -507,20 +534,20 @@
             responseTimer += 0.1;
             document.getElementById('shot-timer').innerText = `Timer: ${responseTimer.toFixed(1)}s`;
             
-            // Timeout Miss (15 Seconds Threshold)
+            // 15 Second Timeout Rule
             if (responseTimer >= 15.0) {
                 clearInterval(timerInterval);
                 document.getElementById('quiz-overlay').style.display = "none";
                 questionActive = false;
                 quizPointer++;
-                displayShotAlert("⏰ TIME EXPIRED! UNFORCED MISS", "red");
-                addCommentary(`${activeSide.toUpperCase()} buffer overflowed. Timeout point to opponent.`);
-                awardPoint(activeSide === 'p1' ? 'p2' : 'p1');
+                pushShotAlert("⏰ TIME EXPIRED! UNFORCED FAULT", "red");
+                logFeed(`${activeSide.toUpperCase()} exceeded propagation delay. Fault point awarded to opponent.`);
+                commitPoint(activeSide === 'p1' ? 'p2' : 'p1');
             }
         }, 100);
     }
 
-    function checkAnswerPayload(selected, correct, activeSide) {
+    function evaluateShotResponse(selected, correct, activeSide) {
         clearInterval(timerInterval);
         document.getElementById('quiz-overlay').style.display = "none";
         questionActive = false;
@@ -529,118 +556,120 @@
         let opponentSide = activeSide === 'p1' ? 'p2' : 'p1';
 
         if (selected === correct) {
+            // Velocity calculation based on gate clock speed response times
             if (responseTimer <= 3.2) {
                 ball.speedType = 'smash';
-                ball.vx = activeSide === 'p1' ? 9.5 : -9.5;
-                displayShotAlert("🚀 CRITICAL SMASH!", "#d90429");
-                addCommentary(`${activeSide.toUpperCase()} processed perfectly for a blazing smash return!`);
+                ball.vx = activeSide === 'p1' ? 9.8 : -9.8;
+                pushShotAlert("🚀 HIGH FREQUENCY SMASH SHOT!", "#d90429");
+                logFeed(`${activeSide.toUpperCase()} clicked immediately! Lightning smash returned.`);
             } else if (responseTimer <= 8.5) {
                 ball.speedType = 'normal';
-                ball.vx = activeSide === 'p1' ? 5.6 : -5.6;
-                displayShotAlert("Clean Return", "#0077b6");
-                addCommentary(`${activeSide.toUpperCase()} clears the ball securely across.`);
+                ball.vx = activeSide === 'p1' ? 5.8 : -5.8;
+                pushShotAlert("Standard Safe Return", "#0077b6");
+                logFeed(`${activeSide.toUpperCase()} registers a secure circuit response.`);
             } else {
                 ball.speedType = 'weak';
-                ball.vx = activeSide === 'p1' ? 3.6 : -3.6;
-                displayShotAlert("Slow Lob Response", "#7b2cbf");
-                addCommentary(`${activeSide.toUpperCase()} had slow gate delays, yielding a weak lob return.`);
+                ball.vx = activeSide === 'p1' ? 3.8 : -3.8;
+                pushShotAlert("Slow Gate Delay Lob", "#7b2cbf");
+                logFeed(`${activeSide.toUpperCase()} had long processing delays, leaving a weak floating lob.`);
             }
             ball.vy = (Math.random() - 0.5) * 5;
             
-            // Safe offset placement
-            if (activeSide === 'p1') ball.x = p1Paddle.x + p1Paddle.width + 6;
-            else ball.x = p2Paddle.x - 6;
+            // Shift coordinates safely off the face bounding boxes to avoid sticking bugs
+            if (activeSide === 'p1') ball.x = p1Paddle.x + p1Paddle.width + 8;
+            else ball.x = p2Paddle.x - 8;
 
             isBallInPlay = true;
         } else {
-            // Wrong Answer counts as unforced miss error
-            displayShotAlert(`❌ ${activeSide.toUpperCase()} MISSED / WRONG ANSWER`, "red");
-            addCommentary(`${activeSide.toUpperCase()} committed a structural logic error. Point to opponent.`);
-            awardPoint(opponentSide);
+            pushShotAlert(`❌ ${activeSide.toUpperCase()} WRONG GATE SPECIFICATION`, "red");
+            logFeed(`${activeSide.toUpperCase()} triggered a logic mismatch fault. Point to opponent.`);
+            commitPoint(opponentSide);
         }
     }
 
-    // 8. MOTION COMPUTATION LOGIC
-    function processPaddlePhysics() {
+    // 8. VELOCITY AND MOVEMENT COMPUTATIONS
+    function recalculateRacketPositions() {
         if (questionActive) return;
-        let paddleSpeed = 6.0;
+        let speedLimit = 6.5;
 
-        // Player 1 Vector processing (Handles W/S keys + Left screen buttons)
-        if (keysPressed['w'] || touchState.p1Up) p1Paddle.y -= paddleSpeed;
-        if (keysPressed['s'] || touchState.p1Down) p1Paddle.y += paddleSpeed;
-        p1Paddle.y = Math.max(10, Math.min(canvas.height - p1Paddle.height - 10, p1Paddle.y));
+        // Left Racket (Player 1) listens to W/S keys + Left-hand on-screen touch arrows
+        if (keysPressed['w'] || touchState.p1Up) p1Paddle.y -= speedLimit;
+        if (keysPressed['s'] || touchState.p1Down) p1Paddle.y += speedLimit;
+        p1Paddle.y = Math.max(12, Math.min(canvas.height - p1Paddle.height - 12, p1Paddle.y));
 
-        // Right Paddle routing based on 1P vs 2P selection
+        // Right Racket Routing Tree
         if (gameMode === 'pvp') {
-            if (keysPressed['arrowup'] || touchState.p2Up) p2Paddle.y -= paddleSpeed;
-            if (keysPressed['arrowdown'] || touchState.p2Down) p2Paddle.y += paddleSpeed;
-            p2Paddle.y = Math.max(10, Math.min(canvas.height - p2Paddle.height - 10, p2Paddle.y));
+            if (keysPressed['arrowup'] || touchState.p2Up) p2Paddle.y -= speedLimit;
+            if (keysPressed['arrowdown'] || touchState.p2Down) p2Paddle.y += speedLimit;
+            p2Paddle.y = Math.max(12, Math.min(canvas.height - p2Paddle.height - 12, p2Paddle.y));
         } else {
-            // 1-Player comfort option: Let right arrow buttons control Left Paddle too!
-            if (keysPressed['arrowup'] || touchState.p2Up) p1Paddle.y -= paddleSpeed;
-            if (keysPressed['arrowdown'] || touchState.p2Down) p1Paddle.y += paddleSpeed;
-            p1Paddle.y = Math.max(10, Math.min(canvas.height - p1Paddle.height - 10, p1Paddle.y));
+            // 1-Player Comfort Mode: Map Right Screen touch arrows to Left Racket too!
+            if (touchState.p2Up) p1Paddle.y -= speedLimit;
+            if (touchState.p2Down) p1Paddle.y += speedLimit;
+            p1Paddle.y = Math.max(12, Math.min(canvas.height - p1Paddle.height - 12, p1Paddle.y));
 
-            // Autonomous computer mainframe AI tracking loop
+            // Automated Mainframe AI Tracker Logic
             if (!isBallInPlay || awaitingServe) return;
-            let aiTarget = ball.y - (p2Paddle.height / 2);
-            let dynamicReactionSpeed = ball.speedType === 'smash' ? 2.9 : 4.4;
-            if (p2Paddle.y < aiTarget) p2Paddle.y += dynamicReactionSpeed;
-            else if (p2Paddle.y > aiTarget) p2Paddle.y -= dynamicReactionSpeed;
-            p2Paddle.y = Math.max(10, Math.min(canvas.height - p2Paddle.height - 10, p2Paddle.y));
+            let centerOfAiRacket = ball.y - (p2Paddle.height / 2);
+            let dynamicTrackerSpeed = ball.speedType === 'smash' ? 3.0 : 4.5;
+            if (p2Paddle.y < centerOfAiRacket) p2Paddle.y += dynamicTrackerSpeed;
+            else if (p2Paddle.y > centerOfAiRacket) p2Paddle.y -= dynamicTrackerSpeed;
+            p2Paddle.y = Math.max(12, Math.min(canvas.height - p2Paddle.height - 12, p2Paddle.y));
         }
     }
 
-    // 9. SCORE MATRIX AND ADVANTAGE LOGIC
-    function awardPoint(winner) {
+    // 9. SCORE MATRIX CALCULATOR
+    function commitPoint(winner) {
         isBallInPlay = false;
-        if (winner === 'p1') p1ScoreIdx++; else p2ScoreIdx++;
+        if (winner === 'p1') p1Points++; else p2Points++;
 
-        if (p1ScoreIdx >= 4 && p1ScoreIdx - p2ScoreIdx >= 2) { resolveSetWinner('p1'); return; }
-        if (p2ScoreIdx >= 4 && p2ScoreIdx - p1ScoreIdx >= 2) { resolveSetWinner('p2'); return; }
+        // Verify standard multi-point tennis win steps (4 points minimum + clear lead of 2)
+        if (p1Points >= 4 && p1Points - p2Points >= 2) { triggerGameSetResolution('p1'); return; }
+        if (p2Points >= 4 && p2Points - p1Points >= 2) { triggerGameSetResolution('p2'); return; }
 
-        updateScoreboardUI();
+        renderScoreboardText();
         setupServingState();
     }
 
-    function resolveSetWinner(winner) {
-        let name = winner === 'p1' ? "PLAYER 1" : (gameMode === 'pvp' ? "PLAYER 2" : "COMPUTER AI");
+    function triggerGameSetResolution(winner) {
+        let tag = winner === 'p1' ? "PLAYER 1" : (gameMode === 'pvp' ? "PLAYER 2" : "COMPUTER AI");
         if (currentGameNum === 1) {
-            alert(`🏆 GAME 1 COMPLETE! Set Winner: ${name}.\nTransitioning to Game 2: Service swaps sides.`);
-            currentGameNum = 2; p1ScoreIdx = 0; p2ScoreIdx = 0;
+            alert(`🏆 GAMESET 1 RECORDED!\nWinner: ${tag}.\n\nAdvancing to Game 2: Service controls will now turn over.`);
+            currentGameNum = 2; p1Points = 0; p2Points = 0;
             document.getElementById('current-game-num').innerText = "2/2";
-            updateScoreboardUI(); setupServingState();
+            renderScoreboardText(); setupServingState();
         } else {
-            alert(`🏁 TOURNAMENT SET COMPLETE!\nBoth game serving cycles have completed calculation arrays.`);
-            currentGameNum = 1; p1ScoreIdx = 0; p2ScoreIdx = 0;
+            alert(`🏁 TOURNAMENT SET ARRAYS FILLED!\nBoth serving segments have completed calculation arrays.`);
+            currentGameNum = 1; p1Points = 0; p2Points = 0;
             document.getElementById('current-game-num').innerText = "1/2";
-            updateScoreboardUI(); setupServingState();
+            renderScoreboardText(); setupServingState();
         }
     }
 
-    function updateScoreboardUI() {
-        let score1 = tennisPointsLabels[Math.min(p1ScoreIdx, 4)];
-        let score2 = tennisPointsLabels[Math.min(p2ScoreIdx, 4)];
-        if (p1ScoreIdx >= 3 && p2ScoreIdx >= 3) {
-            if (p1ScoreIdx === p2ScoreIdx) { score1 = "40"; score2 = "40"; }
-            else if (p1ScoreIdx > p2ScoreIdx) { score1 = "ADV"; score2 = "40"; }
-            else { score1 = "40"; score2 = "ADV"; }
+    function renderScoreboardText() {
+        let display1 = tennisLabelArray[Math.min(p1Points, 4)];
+        let display2 = tennisLabelArray[Math.min(p2Points, 4)];
+        // Handle advantage rules
+        if (p1Points >= 3 && p2Points >= 3) {
+            if (p1Points === p2Points) { display1 = "40"; display2 = "40"; }
+            else if (p1Points > p2Points) { display1 = "ADV"; display2 = "40"; }
+            else { display1 = "40"; display2 = "ADV"; }
         }
-        document.getElementById('p1-tennis-score').innerText = score1;
-        document.getElementById('p2-tennis-score').innerText = score2;
+        document.getElementById('p1-tennis-score').innerText = display1;
+        document.getElementById('p2-tennis-score').innerText = display2;
     }
 
-    // 10. PHYSICS ENGINE LOOPS
-    function gameEngineLoop() {
-        processPaddlePhysics();
+    // 10. MAIN PHYSICS LOOP & HIGH CONTRAST GRAPHICS ENGINE
+    function mainPhysicsEngineLoop() {
+        recalculateRacketPositions();
 
-        // Lock ball coordinates to active server's racket face while awaiting service launch
+        // Pin ball position while waiting to serve
         if (awaitingServe) {
             if (currentServer === 'p1') {
-                ball.x = p1Paddle.x + p1Paddle.width + 8;
+                ball.x = p1Paddle.x + p1Paddle.width + 6;
                 ball.y = p1Paddle.y + (p1Paddle.height / 2);
             } else {
-                ball.x = p2Paddle.x - 8;
+                ball.x = p2Paddle.x - 6;
                 ball.y = p2Paddle.y + (p2Paddle.height / 2);
             }
         }
@@ -649,70 +678,75 @@
             ball.x += ball.vx;
             ball.y += ball.vy;
 
-            // Top and bottom horizontal frame bounce rule
-            if (ball.y <= 10 || ball.y >= canvas.height - 10) ball.vy = -ball.vy;
+            // Bounce on horizontal walls
+            if (ball.y <= 12 || ball.y >= canvas.height - 12) ball.vy = -ball.vy;
 
-            // Player 1 Boundary Intersection (Left Paddle)
+            // Intercept calculation for Player 1 (Left Racket Line)
             if (ball.x <= p1Paddle.x + p1Paddle.width && ball.vx < 0) {
                 if (ball.y >= p1Paddle.y && ball.y <= p1Paddle.y + p1Paddle.height) {
-                    triggerQuestionSequence('p1');
-                } else if (ball.x < p1Paddle.x - 12) {
-                    addCommentary("Ball escapes past Left Paddle boundary!");
-                    awardPoint('p2');
+                    deployQuestionOverlay('p1');
+                } else if (ball.x < p1Paddle.x - 10) {
+                    logFeed("Ball passes clean through Left baseline.");
+                    commitPoint('p2');
                 }
             }
 
-            // Player 2 / AI Boundary Intersection (Right Paddle)
-            if (ball.x >= p2Paddle.x - 8 && ball.vx > 0) {
+            // Intercept calculation for Player 2 / AI (Right Racket Line)
+            if (ball.x >= p2Paddle.x - 4 && ball.vx > 0) {
                 if (ball.y >= p2Paddle.y && ball.y <= p2Paddle.y + p2Paddle.height) {
                     if (gameMode === 'pvp') {
-                        triggerQuestionSequence('p2');
+                        deployQuestionOverlay('p2');
                     } else {
-                        // Mainframe AI Intercept Handler
-                        let errorChance = ball.speedType === 'smash' ? 0.44 : 0.07;
-                        if (Math.random() < errorChance) {
-                            addCommentary("Mainframe AI failed to sample the incoming smash velocity! Point to Player 1.");
-                            awardPoint('p1');
+                        // Computer AI return calculation array
+                        let errorMatrix = ball.speedType === 'smash' ? 0.40 : 0.06;
+                        if (Math.random() < errorMatrix) {
+                            logFeed("Computer AI core missed the incoming flash speed vector! Point to Player 1.");
+                            commitPoint('p1');
                         } else {
-                            ball.vx = -5.5; ball.speedType = 'normal';
+                            ball.vx = -5.8; ball.speedType = 'normal';
                             ball.vy = (Math.random() - 0.5) * 4;
-                            addCommentary("Computer AI successfully samples the vector and returns a slice volley.");
+                            logFeed("Computer AI intercepts the trace and returns a slice volley.");
                         }
                     }
-                } else if (ball.x > p2Paddle.x + 12) {
-                    addCommentary("Ball sails past the right baseline limit!");
-                    awardPoint('p1');
+                } else if (ball.x > p2Paddle.x + p1Paddle.width) {
+                    logFeed("Ball passes clean through Right baseline.");
+                    commitPoint('p1');
                 }
             }
         }
 
-        renderGraphics();
-        requestAnimationFrame(gameEngineLoop);
+        drawGraphicsGrid();
+        requestAnimationFrame(mainPhysicsEngineLoop);
     }
 
-    function renderGraphics() {
+    function drawGraphicsGrid() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = 3;
+        ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 3;
         
-        // Center Line court marking
+        // Midfield divider line
         ctx.beginPath(); ctx.setLineDash([10, 10]);
         ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height);
         ctx.stroke(); ctx.setLineDash([]);
         ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
 
-        // Player 1 Paddle Node (Light Blue)
-        ctx.fillStyle = "#00b4d8";
+        // 🌟 HIGH-VISIBILITY ARCADE RACKETS DESIGN:
+        // Left Racket: Bright Neon Yellow with Solid Black Outline
+        ctx.fillStyle = "#ffdf00"; 
+        ctx.strokeStyle = "#000000"; 
+        ctx.lineWidth = 4;
         ctx.fillRect(p1Paddle.x, p1Paddle.y, p1Paddle.width, p1Paddle.height);
+        ctx.strokeRect(p1Paddle.x, p1Paddle.y, p1Paddle.width, p1Paddle.height);
 
-        // Player 2 / AI Paddle Node (Crimson Red)
-        ctx.fillStyle = "#e63946";
+        // Right Racket: Bright Neon Coral Red with Solid Black Outline
+        ctx.fillStyle = "#ff3333"; 
         ctx.fillRect(p2Paddle.x, p2Paddle.y, p2Paddle.width, p2Paddle.height);
+        ctx.strokeRect(p2Paddle.x, p2Paddle.y, p2Paddle.width, p2Paddle.height);
 
-        // Active Tennis Ball Graphic Particle
+        // Tennis Ball particle node
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         if (ball.speedType === 'smash') {
-            ctx.fillStyle = "#ff0055"; ctx.shadowBlur = 16; ctx.shadowColor = "#ffb703";
+            ctx.fillStyle = "#ff0055"; ctx.shadowBlur = 18; ctx.shadowColor = "#ffb703";
         } else {
             ctx.fillStyle = "#ccff00"; ctx.shadowBlur = 0;
         }
